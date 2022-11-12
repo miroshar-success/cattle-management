@@ -55,7 +55,11 @@ router.get("/search", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
         }
         const searchedResults = yield models_1.default.Animal.findAll({
             where: {
-                [sequelize_1.Op.or]: [{ id_senasa: queryValue }, { name: queryValue }],
+                [sequelize_1.Op.or]: [
+                    { id_senasa: queryValue },
+                    { name: queryValue },
+                    { device_number: queryValue },
+                ],
                 UserId: userId,
             },
         });

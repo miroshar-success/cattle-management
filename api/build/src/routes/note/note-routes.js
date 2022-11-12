@@ -16,7 +16,7 @@ const models_1 = __importDefault(require("../../models"));
 const jwtMiddleware_1 = __importDefault(require("../../config/jwtMiddleware"));
 const express_1 = require("express");
 const user_r_auxiliary_1 = require("../user/user-r-auxiliary");
-const note_validators_1 = require("../../validators/note.validators");
+const note_validators_1 = require("../../validators/note-validators");
 const note_r_auxiliary_1 = require("./note-r-auxiliary");
 const router = (0, express_1.Router)();
 router.post("/newNote", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,7 +26,9 @@ router.post("/newNote", jwtMiddleware_1.default, (req, res) => __awaiter(void 0,
         const userId = reqAuth.sub;
         (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
         let checkedNoteObj = (0, note_validators_1.validateNewNote)(req.body);
+        console.log("Nota validada...");
         const newNote = yield models_1.default.Note.create(checkedNoteObj);
+        console.log("Nota creada.");
         yield newNote.setUser(userId);
         console.log("Nueva nota asociada y creada: ", newNote.toJSON());
         return res.status(200).send(newNote);
@@ -75,13 +77,15 @@ router.delete("/:id", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
 }));
 router.put("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log(req.body);
+        const noteId = req.body.id;
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
         yield (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
         const validatedNote = (0, note_validators_1.validateNewNote)(req.body);
-        let updatedNote = yield models_1.default.Note.update(Object.assign({}, validatedNote), {
+        let updatedNote = yield models_1.default.Note.update(Object.assign(Object.assign({}, validatedNote), { id: noteId }), {
             where: {
-                id: validatedNote.id,
+                id: noteId,
                 UserId: userId,
             },
         });

@@ -9,6 +9,7 @@ mongoose.connect(MONGO_URI, {
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  _id: { type: String, required: true },
   name: { type: String, required: true },
   email: { type: String, required: true },
   profile_img: { type: String, required: false },
@@ -23,8 +24,26 @@ const noteSchema = new Schema({
   importance: String,
 });
 
-const User = mongoose.model("User", userSchema);
-const Note = mongoose.model("Note", noteSchema);
+const animalSchema = new Schema({
+  _id: { type: String, required: true },
+  type_of_animal: String,
+  breed_name: String,
+  location: String,
+  weight_kg: Number,
+  name: { type: String, lowercase: true },
+  device_type: String,
+  device_number: String,
+  comments: String,
+  images: [String],
+  birthday: { type: Date, required: false },
+  is_pregnant: Boolean,
+  delivery_date: { type: Date, required: false },
+  UserId: { type: String, required: true },
+});
+
+export const User = mongoose.model("User", userSchema);
+export const Note = mongoose.model("Note", noteSchema);
+export const Animal = mongoose.model("Animal", animalSchema);
 
 // const createAndSavePerson = (done) => {
 //   let eltonJohn = new Person({

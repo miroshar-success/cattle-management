@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkProfileImg = exports.checkEmail = exports.checkUser = void 0;
+exports.checkProfileImg = exports.checkEmail = exports.checkUserMDB = exports.checkUser = void 0;
 const generic_validators_1 = require("./generic-validators");
 function checkUser(idFromReq, nameFromReq, emailFromReq, profile_img) {
     console.log(`Checking User...`);
@@ -19,6 +19,23 @@ function checkUser(idFromReq, nameFromReq, emailFromReq, profile_img) {
     }
 }
 exports.checkUser = checkUser;
+function checkUserMDB(idFromReq, nameFromReq, emailFromReq, profile_img) {
+    console.log(`Checking User...`);
+    try {
+        const checkedUser = {
+            _id: checkUserId(idFromReq),
+            name: checkUserName(nameFromReq),
+            email: checkEmail(emailFromReq),
+            profile_img: checkProfileImg(profile_img),
+        };
+        return checkedUser;
+    }
+    catch (error) {
+        console.log(`Error en fn checkUser. ${error.message}`);
+        throw new Error(error.message);
+    }
+}
+exports.checkUserMDB = checkUserMDB;
 // CHECK USER ID :
 function checkUserId(idFromReq) {
     if ((0, generic_validators_1.isStringBetween1And101CharsLong)(idFromReq)) {

@@ -4,8 +4,8 @@ exports.isValidTypeOfAnimal = exports.checkAnimal = void 0;
 const animal_types_1 = require("../types/animal-types");
 const generic_validators_1 = require("./generic-validators");
 // CHECK ANIMAL :
-// This function is the main function that validates the data recived in the request for a POST of a new animal or a PUT for updating an Animal.
-// It uses many other auxiliary functions to make sure all the data from the request is valid before trying to store a new instance of Animal in the Data Base.
+// This function is the main function that validates the data received in the request for a POST of a new animal or a PUT for updating an Animal.
+// It uses many other auxiliary functions to make sure all the data from the request is valid before trying to store a new Animal instance in the Data Base.
 // This function not only checks de data, but algo parses de name by forcing an toLowerCase() so the names are saved in all lower cases for a couple of different reasons regarding speed, performance and better practices.
 function checkAnimal(bodyFromReq) {
     try {
@@ -106,7 +106,7 @@ function checkWeight(argFromReq) {
     }
     throw new Error(`The weight_kg "${argFromReq}" is invalid.`);
 }
-// CHECK NAME: (algo forces lower cases)
+// CHECK NAME: (also forces lower cases)
 function checkName(argFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(argFromReq)) {
         return undefined;
