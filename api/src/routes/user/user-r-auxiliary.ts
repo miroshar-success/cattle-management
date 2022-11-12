@@ -1,6 +1,7 @@
 import db from "../../models";
 import { IUser } from "../../types/user-types";
 import { isEmail } from "../../validators/generic-validators";
+import { User } from "../../mongoDB/setup";
 
 export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
   if (!isEmail(emailFromReq)) {
@@ -8,10 +9,8 @@ export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
       `Error al chequear si el email existe en la DataBase: el email '${emailFromReq}' no tiene un formato de email válido.`
     );
   }
-  let emailRegisteredAlready: IUser = await db.User.findOne({
-    where: {
-      email: emailFromReq,
-    },
+  let emailRegisteredAlready: IUser | null = await User.findOne({
+    email: emailFromReq,
   });
   if (emailRegisteredAlready) {
     throw new Error(
@@ -27,7 +26,7 @@ export async function userIsRegisteredInDB(reqAuthSub: any): Promise<boolean> {
   if (typeof reqAuthSub !== "string") {
     throw new Error(`El req.auth.sub debe ser un string`);
   }
-  const foundUserInDB = await db.User.findByPk(reqAuthSub);
+  const foundUserInDB = await User.findById(reqAuthSub);
   if (foundUserInDB) {
     return true;
   } else {
@@ -44,7 +43,7 @@ export async function throwErrorIfUserIsNotRegisteredInDB(
   if (typeof reqAuthSub !== "string") {
     throw new Error(`El req.auth.sub debe ser un string`);
   }
-  const foundUserInDB = await db.User.findByPk(reqAuthSub);
+  const foundUserInDB = await User.findById(reqAuthSub);
   if (foundUserInDB) {
     return;
   } else {
