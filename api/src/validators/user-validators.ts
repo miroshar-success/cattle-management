@@ -1,4 +1,4 @@
-import { IUser } from "../types/user-types";
+import { IUser, IUserMDB } from "../types/user-types";
 import {
   isEmail,
   isFalsyArgument,
@@ -17,6 +17,27 @@ export function checkUser(
   try {
     const checkedUser: IUser = {
       id: checkUserId(idFromReq),
+      name: checkUserName(nameFromReq),
+      email: checkEmail(emailFromReq),
+      profile_img: checkProfileImg(profile_img),
+    };
+    return checkedUser;
+  } catch (error: any) {
+    console.log(`Error en fn checkUser. ${error.message}`);
+    throw new Error(error.message);
+  }
+}
+
+export function checkUserMDB(
+  idFromReq: any,
+  nameFromReq: any,
+  emailFromReq: any,
+  profile_img: any
+): IUserMDB {
+  console.log(`Checking User...`);
+  try {
+    const checkedUser: IUserMDB = {
+      _id: checkUserId(idFromReq),
       name: checkUserName(nameFromReq),
       email: checkEmail(emailFromReq),
       profile_img: checkProfileImg(profile_img),
