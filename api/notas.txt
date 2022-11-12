@@ -1,0 +1,73 @@
+Setup de api con Sequelize y TypeScript siguiendo este video:
+https://www.youtube.com/watch?v=VyEKwp6Q4fY&t=928s
+
+https://sequelize.org/docs/v6/other-topics/typescript/
+
+
+npm installs:
+
+* npm init -y
+
+* npm i typescript @types/node ts-node ts-node-dev -D  ----> descarga typescript y los types para node.
+
+* npm i express dotenv  ----> instala express y archivo .env para mantener los datos de la DB secretas.
+
+* npm i sequelize pg pg-hstore -----> instala sequelize y modulos para postgres.
+
+* si instalo typescript de forma global, puedo usar el comando "tsc --init" el cual me va a crear un archivo tsconfig.json que voy a usar para configurar TypeScript.
+ Para instalarlo de forma global: "npm install -g typescript".
+ Luego puedo hacer "tsc --init"
+ Si no, para crear el archivo de configuración de TS, tengo que hacer:  "npm install --save-dev typescript" y después "tsc --init" (no lo probé. No estoy 100% de esto último sin instalación global). 
+
+ ++ Configurar archivo tsconfig.json
+
+ * Crear .gitignore y agregar node_modules y .env
+ * Crear .env y agregar los datos de la DB.
+
+ * npm i sequelize-cli -D  ----> esto nos permite crear una estructura de archivos y carpetas básica fácilmente. Esto se puede ver en la docu de sequelize en la sección de "migrations".
+
+* npx sequelize-cli init   ----> crea una estructura básica.
+
+++ Cambio ./config/config.json a config.js y lo exporto agregando un module.exports = {}
+
+++ Configurar correctamente los datos de la database en las propiedades de config.js  development. Importar/requerir .env:
+require('dotenv').config();
+
+++ En ./models/index.js, cambiar en la linea 8 (const config = require(__dirname + "/../config/config.json")[env];)
+ la extensión de config.json a config.js, quedando la línea así:
+ const config = require(__dirname + "/../config/config.js")[env];
+
+++ Linea 26 de ./models/index.js 
+   return (
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".ts"
+    );
+     cambiar la extensión de los archivos que busca, de .js a .ts
+
+++ Crear un archivo index.ts en la carpeta raíz. Importar express, y corregir los errores que tira TS usando el Quick Fix, o haciendo esto:
+ npm i --save-dev @types/express
+
+++ Codear las lineas en index.ts para que sincronize con la db y corra el servidor de express.
+
+++ Agregar un script al package.json: "dev": "tsnd --respawn index.ts",
+
+++ Crear/configurar los Models para que sequelize cree las tablas.
+
+** npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+ -----> ese es un comando que ofrece sequelize para crear rápidamente un model con cierto nombre y ciertos atributos.
+
+ ++ Cambiar la extensión del nuevo Model a .ts
+  Esto va a tirar errores por TS, por lo que tengo que solucionarlo agregando los types que corresponda. En este caso, la mejor opción es asignarle tipos "any".
+  Cambio el require del Model por un import para ser consistente con ES6.
+
+  ++ Setear una interface para el modelo.
+  ++ Setear atributos, Associations y demás del modelo,
+  
+  ++ Crear segundo modelo (por ejemplo,usando: npx sequelize-cli model:generate --name Pet --attributes name:string,race:string,status:string )
+  ++ Cambiar extensión del nuevo model a .ts
+  ++ Configurar el nuevo modelo (atributos, interfaces, associations, etc)
+
+  ++ Cambiar extensión de ./models/index.js a .ts y corregir sus errores de tipado. el Quick Fix ayuda bien en la mayoría de los errores que tenemos acá.
+  ++ El error que figura en el otro archivo index lo soluciono cambiando el tipo de export de models/index.ts, al exportar como default a db.
+
+++ Si ahora ejecuto npm run dev, debería ver en pgAdmin4 que se crearon las dos tablas en la db.
+
