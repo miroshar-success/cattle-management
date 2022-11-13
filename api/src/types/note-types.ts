@@ -12,3 +12,12 @@ export enum EImportance {
   Media = "Media",
   Baja = "Baja",
 }
+
+export interface INoteMDB {
+  _id?: string;
+  title?: string;
+  theme?: string;
+  comment: string;
+  importance?: EImportance;
+  UserId?: string;
+}
