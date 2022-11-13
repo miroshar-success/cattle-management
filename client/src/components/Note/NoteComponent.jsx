@@ -17,7 +17,7 @@ export function NoteComponent() {
   const [showEditForm, setShowEditForm] = React.useState(false);
   //eslint-disable-next-line
   const [noteToEdit, setNoteToEdit] = React.useState({
-    id: "",
+    _id: "",
     title: "",
     theme: "",
     comment: "",

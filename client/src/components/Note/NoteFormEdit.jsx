@@ -8,7 +8,7 @@ import { getNotesFromUser } from "../../redux/features/notes";
 
 export function NoteFormEdit({ note, closeModal }) {
   const [input, setInput] = React.useState({
-    id: note.id || "",
+    _id: note._id || "",
     title: note.title || "",
     theme: note.theme || "",
     comment: note.comment || "",
@@ -34,7 +34,7 @@ export function NoteFormEdit({ note, closeModal }) {
         header(accessToken)
       );
       if (response.status >= 200 && response.status < 210) {
-        alert("Nota actualizada exitosamente.");
+        alert(`${response.data.msg}`);
         dispatch(getNotesFromUser(accessToken));
       }
     } catch (error) {

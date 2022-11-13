@@ -46,7 +46,7 @@ export function NoteAcciones({ note }) {
           <TbListDetails />
         </Link>
       </button>
-      <button className="btn-edit" value={note?.id} onClick={showModal}>
+      <button className="btn-edit" value={note?._id} onClick={showModal}>
         <BiEditAlt />
       </button>
       <button
