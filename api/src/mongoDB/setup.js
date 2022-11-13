@@ -8,20 +8,20 @@ mongoose.connect(MONGO_URI, {
 
 const Schema = mongoose.Schema;
 
+const noteSchema = new Schema({
+  // _id: String,
+  title: String,
+  theme: String,
+  comment: String,
+  importance: String,
+});
 const userSchema = new Schema({
   _id: { type: String, required: true },
   name: { type: String, required: true },
   email: { type: String, required: true },
   profile_img: { type: String, required: false },
   animals: [],
-  notes: [],
-});
-
-const noteSchema = new Schema({
-  title: String,
-  theme: String,
-  comment: String,
-  importance: String,
+  notes: [noteSchema],
 });
 
 const animalSchema = new Schema({
