@@ -51,7 +51,7 @@ export function NoteAcciones({ note }) {
       </button>
       <button
         className="btn-delete"
-        value={note?.id}
+        value={note?._id}
         onClick={handleDeleteWithPrompt}
       >
         {/* <MdDeleteOutline /> */} X
