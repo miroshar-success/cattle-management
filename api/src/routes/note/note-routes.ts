@@ -7,8 +7,11 @@ import {
   throwErrorIfUserIsNotRegisteredInDB,
   userIsRegisteredInDB,
 } from "../user/user-r-auxiliary";
-import { validateNewNote } from "../../validators/note-validators";
+import { validateNewNoteMDB } from "../../validators/note-validators";
 import { getAllNotesFromUser } from "./note-r-auxiliary";
+
+import { Note, User } from "../../mongoDB/setup";
+
 const router = Router();
 
 router.post("/newNote", jwtCheck, async (req: any, res) => {
@@ -17,17 +20,32 @@ router.post("/newNote", jwtCheck, async (req: any, res) => {
     const reqAuth = req.auth;
     const userId = reqAuth.sub;
     throwErrorIfUserIsNotRegisteredInDB(userId);
-    let checkedNoteObj = validateNewNote(req.body);
+    let checkedNoteObj = validateNewNoteMDB(req.body);
     console.log("Nota validada...");
 
-    const newNote = await db.Note.create(checkedNoteObj);
-    console.log("Nota creada.");
+    // const newNote = await db.Note.create(checkedNoteObj);
+    let notesOwner = await User.findById(userId);
+    if (notesOwner) {
+      console.log("usuario encontrado por id...");
+      console.log(notesOwner);
 
-    await newNote.setUser(userId);
-    console.log("Nueva nota asociada y creada: ", newNote.toJSON());
-    return res.status(200).send(newNote);
+      let nuevaNota = await Note.create(checkedNoteObj);
+      console.log("Nueva nota = ", nuevaNota);
+
+      notesOwner?.notes?.push(nuevaNota);
+      console.log("nota pusheada...");
+
+      await notesOwner.save();
+      // await newNote.setUser(userId);
+      // console.log("Nueva nota asociada y creada: ", newNote.toJSON());
+      return res.status(200).send(checkedNoteObj);
+    } else {
+      return res
+        .status(400)
+        .send({ error: "No se encontró al usuario en la base de datos." });
+    }
   } catch (error: any) {
-    console.log(`Eror en ruta  POST 'note/newNote'. ${error.message}`);
+    console.log(`Error en ruta  POST 'note/newNote'. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });
@@ -46,50 +64,88 @@ router.get("/all", jwtCheck, async (req: any, res) => {
 });
 
 router.delete("/:id", jwtCheck, async (req: any, res) => {
+  console.log(`EN RUTA DELETE :ID`);
+
   try {
     const noteIdFromParams = req.params.id;
+    console.log("noteIdFromParams = ", noteIdFromParams);
+
     if (!noteIdFromParams) {
       throw new Error(`Error. Debe ingresar un id por params.`);
     }
     const reqAuth: IReqAuth = req.auth;
     const userId: string = reqAuth.sub;
-    let deletedNote = await db.Note.destroy({
-      where: {
-        id: noteIdFromParams,
-        UserId: userId,
-      },
-    });
-    console.log("DELETED NOTE = ", deletedNote);
-    return res
-      .status(200)
-      .send({ msg: "Nota eliminada exitosamente", status: true });
+    let userInDB = await User.findById(userId);
+    if (userInDB) {
+      let noteFound = userInDB.notes.id(noteIdFromParams);
+      console.log("NOTE FOUND = ", noteFound);
+      userInDB.notes.id(noteIdFromParams)?.remove();
+      await userInDB.save();
+      console.log("Documento borrado.");
+      // console.log(userInDB);
+      return res
+        .status(200)
+        .send({ msg: "Nota eliminada exitosamente", status: true });
+    } else {
+      throw new Error("Usuario no encontrado en la base de datos.");
+    }
   } catch (error: any) {
     console.log(`Error en ruta DELETE '/note/:id. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });
 
+// router.delete("/:id", jwtCheck, async (req: any, res) => {
+//   try {
+//     const noteIdFromParams = req.params.id;
+//     if (!noteIdFromParams) {
+//       throw new Error(`Error. Debe ingresar un id por params.`);
+//     }
+//     const reqAuth: IReqAuth = req.auth;
+//     const userId: string = reqAuth.sub;
+//     let deletedNote = await db.Note.destroy({
+//       where: {
+//         id: noteIdFromParams,
+//         UserId: userId,
+//       },
+//     });
+//     console.log("DELETED NOTE = ", deletedNote);
+//     return res
+//       .status(200)
+//       .send({ msg: "Nota eliminada exitosamente", status: true });
+//   } catch (error: any) {
+//     console.log(`Error en ruta DELETE '/note/:id. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// });
+
 router.put("/", jwtCheck, async (req: any, res) => {
   try {
     console.log(req.body);
-    const noteId = req.body.id;
+    const noteId = req.body._id;
+    console.log("NOTE ID = ", noteId);
+
     const reqAuth: IReqAuth = req.auth;
     const userId: string = reqAuth.sub;
     await throwErrorIfUserIsNotRegisteredInDB(userId);
-    const validatedNote: INote = validateNewNote(req.body);
-    let updatedNote = await db.Note.update(
-      { ...validatedNote, id: noteId },
-      {
-        where: {
-          id: noteId,
-          UserId: userId,
-        },
+    const validatedNote: INote = validateNewNoteMDB(req.body);
+
+    let foundUser = await User.findById(userId);
+    if (foundUser) {
+      let noteToUpdate = foundUser?.notes.id(noteId);
+      if (noteToUpdate) {
+        noteToUpdate.title = req.body.title;
+        noteToUpdate.comment = req.body.comment;
+        noteToUpdate.theme = req.body.theme;
+        noteToUpdate.importance = req.body.importance;
+        console.log("noteToUpdate Updated = ", noteToUpdate);
+        await foundUser.save();
       }
-    );
-    return res.status(200).send({
-      updated: Number(updatedNote[0]),
-      msg: `${updatedNote[0]} nota ha sido actualizada exitosamente.`,
-    });
+      console.log("USER AFTER SAVE = ", foundUser);
+      return res.status(200).send({ updated: 1, msg: "Notaaaa ddbb MOngoo" });
+    } else {
+      throw new Error("No se ha encontrado al usuario en la base de datos.");
+    }
   } catch (error: any) {
     console.log(`Error en ruta PUT 'note/:id'. ${error.message}`);
     return res.status(400).send({ error: error.message });

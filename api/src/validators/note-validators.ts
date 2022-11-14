@@ -1,13 +1,14 @@
-import { EImportance, INote } from "../types/note-types";
+import { EImportance, INote, INoteMDB } from "../types/note-types";
 import {
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
 } from "./generic-validators";
 
-export function validateNewNote(bodyFromReq: any): INote {
+export function validateNewNoteMDB(bodyFromReq: any): INote {
   console.log("Validando nota con contenido del req.body");
 
-  let newNoteObj: INote = {
+  let newNoteObj: INoteMDB = {
+    // _id: bodyFromReq._id,
     title: checkTitle(bodyFromReq.title),
     theme: checkTheme(bodyFromReq.theme),
     comment: checkComment(bodyFromReq.comment),
