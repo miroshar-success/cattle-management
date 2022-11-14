@@ -103,12 +103,14 @@ export const SignUp = () => {
             name="email"
           />
         </div>
-        <button
-          type="submit"
-          className="bg-green px-8 py-2 text-white font-bold rounded-sm my-5 border border-transparent border-solid hover:bg-transparent hover:text-green  hover:border-green  transition duration-300 "
-        >
-          Registrarme
-        </button>
+        {isRegistered.pure && (
+          <button
+            type="submit"
+            className="bg-green px-8 py-2 text-white font-bold rounded-sm my-5 border border-transparent border-solid hover:bg-transparent hover:text-green  hover:border-green  transition duration-300 "
+          >
+            Registrarme
+          </button>
+        )}
       </form>
       {isRegistered.error && (
         <div className="flex flex-col items-center md:w-1/2 md:my-0">
