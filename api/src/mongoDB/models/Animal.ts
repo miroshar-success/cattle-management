@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 export interface IAnimal {
-  // _id: string;
+  _id: string;
   id_senasa: string;
   type_of_animal: ITypeOfAnimal;
   breed_name?: string;
@@ -11,6 +11,7 @@ export interface IAnimal {
   device_type: string;
   device_number: string;
   comments?: string;
+  images?: any[];
   image_1?: string;
   image_2?: string;
   image_3?: string;
@@ -28,7 +29,7 @@ export enum ITypeOfAnimal {
 
 export const animalSchema: Schema = new Schema(
   {
-    // _id: { type: String, required: true },
+    _id: { type: String, required: true },
     id_senasa: { type: String, required: true },
     type_of_animal: { type: String, required: true },
     breed_name: { type: String, required: false },

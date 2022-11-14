@@ -7,6 +7,7 @@ import animalRouter from "./routes/animal/animal-routes";
 import userRouter from "./routes/user/user-routes";
 import noteRouter from "./routes/note/note-routes";
 import jwtCheck from "./config/jwtMiddleware";
+import animalRouterMDB from "./routes/animal/animal-routes-MDB";
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(jwtCheck);
 // routes middlewares:
 app.use("/test", testRouter);
-app.use("/animal", animalRouter);
+app.use("/animal", animalRouterMDB);
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
 

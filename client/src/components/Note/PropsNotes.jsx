@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { NoteAcciones } from "./NoteAcciones";
 import { Pagination } from "../Pagination/Pagination";
+import { parseDate } from "../../constants/parseDateFn";
 
 export function PropsNotes({ notes }) {
   const [page, setPage] = useState(1);
@@ -78,12 +79,12 @@ export function PropsNotes({ notes }) {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap capitalize">
-                      {note?.createdAt}
+                      {parseDate(note?.createdAt)}
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap capitalize">
-                      {note?.updatedAt}
+                      {parseDate(note?.updatedAt)}
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

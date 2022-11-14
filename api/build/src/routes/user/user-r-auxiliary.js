@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userExistsInDataBase = exports.throwErrorIfUserIsNotRegisteredInDB = exports.userIsRegisteredInDB = exports.emailExistsInDataBase = void 0;
+exports.getUserByIdOrThrowError = exports.userExistsInDataBase = exports.throwErrorIfUserIsNotRegisteredInDB = exports.userIsRegisteredInDB = exports.emailExistsInDataBase = void 0;
 const generic_validators_1 = require("../../validators/generic-validators");
 const mongoDB_1 = require("../../mongoDB/");
 async function emailExistsInDataBase(emailFromReq) {
@@ -63,3 +63,13 @@ async function userExistsInDataBase(reqAuthSub) {
     }
 }
 exports.userExistsInDataBase = userExistsInDataBase;
+async function getUserByIdOrThrowError(userId) {
+    let userFromDB = await mongoDB_1.User.findById(userId);
+    if (userFromDB !== null) {
+        return userFromDB;
+    }
+    else {
+        throw new Error("Usuario no encontrado en la base de datos.");
+    }
+}
+exports.getUserByIdOrThrowError = getUserByIdOrThrowError;

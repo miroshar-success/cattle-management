@@ -1,4 +1,5 @@
 export interface IAnimal {
+  // _id: string;
   id_senasa: string;
   type_of_animal: ITypeOfAnimal;
   breed_name?: string;
@@ -8,6 +9,7 @@ export interface IAnimal {
   device_type: string;
   device_number: string;
   comments?: string;
+  images?: string[];
   image_1?: string;
   image_2?: string;
   image_3?: string;

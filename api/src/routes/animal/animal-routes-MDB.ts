@@ -1,10 +1,12 @@
 import db from "../../models";
 import { checkAnimal } from "../../validators/animal-validators";
-import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
 import { IReqAuth } from "../../types/user-types";
-import { throwErrorIfUserIsNotRegisteredInDB } from "../user/user-r-auxiliary";
+import {
+  getUserByIdOrThrowError,
+  throwErrorIfUserIsNotRegisteredInDB,
+} from "../user/user-r-auxiliary";
 import { Op } from "sequelize";
 import {
   getAndParseIsPregnantQuery,
@@ -19,29 +21,170 @@ import {
   typesOfAnimalsToArray,
 } from "./animal-r-auxiliary";
 import { stringToBoolean } from "../../validators/generic-validators";
+
+// MDB:
+import { Animal, User } from "../../mongoDB";
+import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
+import { IUser } from "../../mongoDB/models/User";
 require("dotenv").config();
 const USER_ID_FER_AZU = process.env.USER_ID_FER_AZU;
 const router = Router();
 
-// ------- RUTAS : ---------
+// ------- RUTAS MONGO MONGOOSE : ---------
 
-// GET ALL FROM ANIMALS :
+// GET ALL ANIMALS FROM USER :
 router.get("/", jwtCheck, async (req: any, res) => {
   try {
     const reqAuth: IReqAuth = req.auth;
     const userId = reqAuth.sub;
 
-    const allAnimalsFromDB = await db.Animal.findAll({
-      where: {
-        UserId: userId,
-      },
-    });
-    return res.status(200).send(allAnimalsFromDB);
+    const userInDB: IUser | null = await User.findById(userId);
+    if (userInDB !== null) {
+      let animalsFromUser: IAnimal[] = userInDB.animals;
+      console.log("animalsFromUser.length = ", animalsFromUser.length);
+      return res.status(200).send(animalsFromUser);
+    } else {
+      throw new Error("Usuario no encontrado en la base de datos.");
+    }
   } catch (error: any) {
     console.log(`Error en "/animal/". ${error.message}`);
     return res.send({ error: error.message });
   }
 });
+
+// POST NEW ANIMAL:
+router.post("/", jwtCheck, async (req: any, res) => {
+  try {
+    const reqAuth: IReqAuth = req.auth;
+    const userId = reqAuth.sub;
+    await throwErrorIfUserIsNotRegisteredInDB(userId);
+    const userInDB = await getUserByIdOrThrowError(userId);
+    // const userInDB = await User.findById(userId)
+    console.log(`REQ.BODY = `);
+    console.log(req.body);
+    const validatedNewAnimal = checkAnimal({ ...req.body, userId });
+    const newAnimalCreated = await Animal.create(validatedNewAnimal);
+    userInDB?.animals.push(newAnimalCreated);
+    await userInDB.save();
+    console.log(`nuevo animal creado y pusheado al usuario con id ${userId}`);
+    return res
+      .status(200)
+      .send({ msg: "Animal creado correctamente.", animal: newAnimalCreated });
+  } catch (error: any) {
+    console.log(`Error en POST 'user/'. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// DELETE ANIMAL :
+router.delete("/delete/:id_senasa", jwtCheck, async (req: any, res) => {
+  try {
+    const reqAuth: IReqAuth = req.auth;
+    const userId = reqAuth.sub;
+    const id_senasaFromParams = req.params.id_senasa;
+    console.log(`En delete por id...: `, id_senasaFromParams);
+
+    if (!id_senasaFromParams) {
+      throw new Error(`El id de senasa es falso.`);
+    }
+    await throwErrorIfUserIsNotRegisteredInDB(userId);
+    let userInDB = await User.findById(userId);
+    if (userInDB) {
+      let animalFound = userInDB.notes.id(id_senasaFromParams);
+      console.log("Animal FOUND = ", animalFound);
+      let removed = await userInDB.animals.id(id_senasaFromParams)?.remove();
+      console.log("REMOVED = ", removed);
+
+      await userInDB.save();
+      console.log("Documento borrado.");
+      // console.log(userInDB);
+      return res
+        .status(200)
+        .send({ msg: "Animal eliminado exitosamente", status: true });
+    } else {
+      throw new Error("Usuario no encontrado en la base de datos.");
+    }
+  } catch (error: any) {
+    console.log(`Error en DELETE por id. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// GET BY ID_SENASA :
+router.get("/id/:id_senasa", jwtCheck, async (req: any, res) => {
+  try {
+    const { id_senasa } = req.params;
+    const reqAuth: IReqAuth = req.auth;
+    const userId = reqAuth.sub;
+    const userInDB = await getUserByIdOrThrowError(userId);
+
+    let foundAnimal = userInDB.animals.id(id_senasa);
+    if (foundAnimal) {
+      console.log("FOUND ANIMAL ENCONTRADO! = ", foundAnimal);
+      return res.status(200).send(foundAnimal);
+    } else {
+      return res.status(404).send({
+        error: `No se encontró ningún registro con el id '${id_senasa}'.`,
+      });
+    }
+  } catch (error: any) {
+    console.log(`Error en GET "/:id_senasa". ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// UPDATE ANIMAL :
+router.put("/", jwtCheck, async (req: any, res) => {
+  try {
+    console.log(`REQ.BODY = `);
+    console.log(req.body);
+    const reqAuth: IReqAuth = req.auth;
+    const userId = reqAuth.sub;
+
+    const userInDB = await getUserByIdOrThrowError(userId);
+    const validatedAnimal: IAnimal = checkAnimal({ ...req.body, userId });
+    let foundAnimal = userInDB.animals.id(validatedAnimal._id);
+    foundAnimal.type_of_animal = validatedAnimal.type_of_animal;
+    foundAnimal.breed_name = validatedAnimal.breed_name;
+    foundAnimal.location = validatedAnimal.location;
+    foundAnimal.weight_kg = validatedAnimal.weight_kg;
+    foundAnimal.name = validatedAnimal.name;
+    foundAnimal.device_type = validatedAnimal.device_type;
+    foundAnimal.device_number = validatedAnimal.device_number;
+    foundAnimal.images = validatedAnimal.images;
+    foundAnimal.comments = validatedAnimal.comments;
+    foundAnimal.birthday = validatedAnimal.birthday;
+    foundAnimal.is_pregnant = validatedAnimal.is_pregnant;
+    foundAnimal.delivery_date = validatedAnimal.delivery_date;
+
+    await userInDB.save();
+
+    console.log(`Animal actualizado. Retornando respuesta...`);
+
+    return res.send({
+      updated: Number(1),
+      msg: `Cantidad de animales actualizados correctamente: ${1}`,
+    });
+  } catch (error: any) {
+    console.log(`Error en PUT "/animal". ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// GET TYPES OF ANIMAL ACCEPTED :
+router.get("/typesAllowed", async (req, res) => {
+  try {
+    console.log(`Types of animals allowed: `);
+    let typesOfAnimalsArray = typesOfAnimalsToArray();
+    console.log(typesOfAnimalsArray);
+    return res.status(200).send(typesOfAnimalsArray);
+  } catch (error: any) {
+    console.log(`Error en GET 'animal/typesAllowed. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+//! ------- RUTAS SEQUELIZE : ---------
 
 // SEARCH BY QUERY :
 router.get("/search", jwtCheck, async (req: any, res) => {
@@ -70,135 +213,6 @@ router.get("/search", jwtCheck, async (req: any, res) => {
 
     return res.status(200).send(searchedResults);
   } catch (error: any) {
-    return res.status(400).send({ error: error.message });
-  }
-});
-
-// GET BY ID_SENASA :
-router.get("/id/:id_senasa", jwtCheck, async (req: any, res) => {
-  try {
-    const { id_senasa } = req.params;
-    const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-    //Chequear si este where está bien puesto:
-    const foundAnimal: IAnimal = await db.Animal.findOne({
-      where: {
-        id_senasa: id_senasa,
-        UserId: userId,
-      },
-    });
-    if (foundAnimal) {
-      return res.status(200).send(foundAnimal);
-    } else {
-      return res.status(404).send({
-        error: `No se encontró ningún registro con el id '${id_senasa}'.`,
-      });
-    }
-  } catch (error: any) {
-    console.log(`Error en GET "/:id_senasa". ${error.message}`);
-    return res.status(400).send({ error: error.message });
-  }
-});
-
-// POST NEW ANIMAL JWTCHECK:
-router.post("/", jwtCheck, async (req: any, res) => {
-  try {
-    const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-    await throwErrorIfUserIsNotRegisteredInDB(userId);
-    // let userIsRegistered = await userIsRegisteredInDB(userId);
-    // if (userIsRegistered !== true) {
-    //   throw new Error(`No se encontró al usuario registrado en la DB`);
-    // }
-
-    console.log(`REQ.BODY = `);
-    console.log(req.body);
-    const validatedNewAnimal = checkAnimal(req.body);
-    const newAnimalCreated = await db.Animal.create(validatedNewAnimal);
-    await newAnimalCreated.setUser(userId);
-    console.log(`nuevo animal creado y asociado al usuario con id ${userId}`);
-    return res
-      .status(200)
-      .send({ msg: "Animal creado correctamente.", animal: newAnimalCreated });
-  } catch (error: any) {
-    console.log(`Error en POST 'user/'. ${error.message}`);
-    return res.status(400).send({ error: error.message });
-  }
-});
-
-// UPDATE ANIMAL :
-router.put("/", jwtCheck, async (req: any, res) => {
-  try {
-    console.log(`REQ.BODY = `);
-    console.log(req.body);
-    const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-
-    // let userIsRegistered = await userIsRegisteredInDB(userId);
-    // if (userIsRegistered !== true) {
-    //   throw new Error(`No se encontró al usuario registrado en la DB`);
-    // }
-    await throwErrorIfUserIsNotRegisteredInDB(userId);
-
-    const validatedAnimal: IAnimal = checkAnimal(req.body);
-    const updatedAnimal = await db.Animal.update(
-      { ...validatedAnimal },
-      {
-        where: {
-          id_senasa: validatedAnimal.id_senasa,
-          UserId: userId,
-        },
-      }
-    );
-    console.log(`Animal actualizado. Retornando respuesta...`);
-
-    return res.send({
-      updated: Number(updatedAnimal[0]),
-      msg: `Cantidad de animales actualizados correctamente: ${updatedAnimal[0]}`,
-    });
-  } catch (error: any) {
-    console.log(`Error en PUT "/animal". ${error.message}`);
-    return res.status(400).send({ error: error.message });
-  }
-});
-
-// DELETE ANIMAL :
-router.delete("/delete/:id_senasa", jwtCheck, async (req: any, res) => {
-  try {
-    console.log(`En delete por id...`);
-    const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-    const id_senasaFromParams = req.params.id_senasa;
-    if (!id_senasaFromParams) {
-      throw new Error(`El id de senasa no puede ser falso.`);
-    }
-    await throwErrorIfUserIsNotRegisteredInDB(userId);
-    let deletedAnimal = await db.Animal.destroy({
-      where: {
-        id_senasa: id_senasaFromParams,
-        UserId: userId,
-      },
-    });
-    console.log(deletedAnimal);
-    return res.status(200).send({
-      msg: `${deletedAnimal} Animal destruido suavemente`,
-      deletedAnimal: deletedAnimal,
-    });
-  } catch (error: any) {
-    console.log(`Error en DELETE por id. ${error.message}`);
-    return res.status(400).send({ error: error.message });
-  }
-});
-
-// GET TYPES OF ANIMAL ACCEPTED :
-router.get("/typesAllowed", async (req, res) => {
-  try {
-    console.log(`Types of animals allowed: `);
-    let typesOfAnimalsArray = typesOfAnimalsToArray();
-    console.log(typesOfAnimalsArray);
-    return res.status(200).send(typesOfAnimalsArray);
-  } catch (error: any) {
-    console.log(`Error en GET 'animal/typesAllowed. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });

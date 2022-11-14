@@ -10,7 +10,7 @@ var ITypeOfAnimal;
     ITypeOfAnimal["Vaca"] = "Vaca";
 })(ITypeOfAnimal = exports.ITypeOfAnimal || (exports.ITypeOfAnimal = {}));
 exports.animalSchema = new mongoose_1.Schema({
-    // _id: { type: String, required: true },
+    _id: { type: String, required: true },
     id_senasa: { type: String, required: true },
     type_of_animal: { type: String, required: true },
     breed_name: { type: String, required: false },

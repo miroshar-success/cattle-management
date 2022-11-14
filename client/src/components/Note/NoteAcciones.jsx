@@ -43,11 +43,6 @@ export function NoteAcciones({ note }) {
 
   return (
     <div className="flex gap-3">
-      <button className="btn-details" value={note?.id}>
-        <Link to="/home/details">
-          <TbListDetails />
-        </Link>
-      </button>
       <button className="btn-edit" value={note?._id} onClick={showModal}>
         <BiEditAlt />
       </button>
@@ -56,7 +51,7 @@ export function NoteAcciones({ note }) {
         value={note?._id}
         onClick={handleDeleteWithPrompt}
       >
-        {/* <MdDeleteOutline /> */} X
+        X
       </button>
       <NoteModalEdit show={showValue} setShowValue={setShowValue} note={note} />
     </div>

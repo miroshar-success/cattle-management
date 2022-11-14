@@ -3,9 +3,14 @@ import DetailDiv from "./DetailDiv";
 import ImgDetail from "./ImgDetail";
 import { useDispatch } from "react-redux";
 import { resetDetail } from "../../redux/features/animals";
+import { parseDate } from "../../constants/parseDateFn";
 
 export default function DetailCard({ animal }) {
-  const images = [animal?.image_1, animal?.image_2, animal?.image_3];
+  const images = [
+    animal?.images?.[0],
+    animal?.images?.[1],
+    animal?.images?.[2],
+  ];
 
   const dispatch = useDispatch();
 
@@ -34,9 +39,7 @@ export default function DetailCard({ animal }) {
         <div className=" relative h-56   sm:h-64 xl:h-80 ">
           <ImgDetail img={img} />
         </div>
-        {imagesParsed[0] === null &&
-        imagesParsed[1] === null &&
-        imagesParsed[2] === null ? null : (
+        {!imagesParsed[0] && !imagesParsed[1] && !imagesParsed[2] ? null : (
           <>
             {/* Slider Controls */}
             {index > 0 && (
@@ -108,6 +111,14 @@ export default function DetailCard({ animal }) {
         {animal?.comments ? (
           <DetailDiv text="Comentarios" value={animal.comments} />
         ) : null}
+        <DetailDiv
+          text="Fecha de creación"
+          value={parseDate(animal?.createdAt)}
+        />
+        <DetailDiv
+          text="Última fecha de edición"
+          value={parseDate(animal?.updatedAt)}
+        />
         {animal?.type_of_animal === "Vaca" ||
         animal?.type_of_animal === "Vaquillona" ? (
           <>

@@ -1,12 +1,17 @@
-import mongoose, { Types, Schema } from "mongoose";
+import { Types, Schema } from "mongoose";
 
-// --- prueba con NoteSchema :
 export interface INote {
-  // _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   title?: string;
   theme?: string;
   comment: string;
-  importance?: string;
+  importance?: EImportance;
+}
+
+export enum EImportance {
+  Alta = "Alta",
+  Media = "Media",
+  Baja = "Baja",
 }
 
 export const noteSchema: Schema = new Schema(

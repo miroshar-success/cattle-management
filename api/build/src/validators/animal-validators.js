@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isValidTypeOfAnimal = exports.checkAnimal = void 0;
-const animal_types_1 = require("../types/animal-types");
+const Animal_1 = require("../mongoDB/models/Animal");
 const generic_validators_1 = require("./generic-validators");
 // CHECK ANIMAL :
 // This function is the main function that validates the data received in the request for a POST of a new animal or a PUT for updating an Animal.
@@ -11,7 +11,9 @@ function checkAnimal(bodyFromReq) {
     try {
         console.log(`Checking Animal...`);
         const checkedAnimal = {
+            _id: checkId(bodyFromReq.id_senasa),
             id_senasa: checkId(bodyFromReq.id_senasa),
+            UserId: bodyFromReq.userId,
             type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
             breed_name: checkBreedName(bodyFromReq.breed_name),
             location: checkLocation(bodyFromReq.location),
@@ -19,9 +21,10 @@ function checkAnimal(bodyFromReq) {
             name: checkName(bodyFromReq.name),
             device_type: checkDeviceType(bodyFromReq.device_type),
             device_number: checkDeviceNumber(bodyFromReq.device_number),
-            image_1: checkImage(bodyFromReq.image_1),
-            image_2: checkImage(bodyFromReq.image_2),
-            image_3: checkImage(bodyFromReq.image_3),
+            images: checkImages(bodyFromReq.images),
+            // image_1: checkImage(bodyFromReq.image_1),
+            // image_2: checkImage(bodyFromReq.image_2),
+            // image_3: checkImage(bodyFromReq.image_3),
             comments: checkComments(bodyFromReq.comments),
             birthday: checkBirthday(bodyFromReq.birthday),
             is_pregnant: checkIsPregnant(bodyFromReq.is_pregnant),
@@ -35,6 +38,24 @@ function checkAnimal(bodyFromReq) {
     }
 }
 exports.checkAnimal = checkAnimal;
+// CHECK IMAGES :
+function checkImages(imagesArrayFromReq) {
+    let imagesChecked = [];
+    if ((0, generic_validators_1.isFalsyArgument)(imagesArrayFromReq)) {
+        return [];
+    }
+    if (Array.isArray(imagesArrayFromReq) && imagesArrayFromReq.length === 0) {
+        return [];
+    }
+    if (Array.isArray(imagesArrayFromReq) && imagesArrayFromReq.length > 0) {
+        imagesArrayFromReq.forEach((image) => {
+            if ((0, generic_validators_1.isValidURLImage)(image)) {
+                imagesChecked.push(image);
+            }
+        });
+    }
+    return imagesChecked;
+}
 // CHECK DEVICE_TYPE :
 function checkDeviceType(argFromReq) {
     if ((0, generic_validators_1.isStringBetween1And50CharsLong)(argFromReq)) {
@@ -64,7 +85,7 @@ function checkId(idFromReq) {
 }
 // CHECK TYPE OF ANIMAL:
 function isValidTypeOfAnimal(argument) {
-    return Object.values(animal_types_1.ITypeOfAnimal).includes(argument);
+    return Object.values(Animal_1.ITypeOfAnimal).includes(argument);
 }
 exports.isValidTypeOfAnimal = isValidTypeOfAnimal;
 function checkTypeOfAnimal(argFromReq) {

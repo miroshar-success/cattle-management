@@ -29,11 +29,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getObjOfAnimalsByTypeOfAnimal = exports.getObjOfAnimalsBySex = exports.getObjOfAnimalsNotPregnant = exports.getObjOfAnimalsPregnant = exports.getObjOfAllAnimalsAndCount = exports.getObjOfAnimalsByDeviceType = exports.getObjOfAnimalsByLocation = exports.getObjOfAnimalsByRace = exports.getAndParseIsPregnantQuery = exports.typesOfAnimalsToArray = void 0;
 const sequelize_1 = __importStar(require("sequelize"));
 const models_1 = __importDefault(require("../../models"));
-const animal_types_1 = require("../../types/animal-types");
+const Animal_1 = require("../../mongoDB/models/Animal");
 // TYPES OF ANIMALS TO ARRAY :
 function typesOfAnimalsToArray() {
     try {
-        let typesParsedToArray = Object.values(animal_types_1.ITypeOfAnimal);
+        let typesParsedToArray = Object.values(Animal_1.ITypeOfAnimal);
         return typesParsedToArray;
     }
     catch (error) {
@@ -265,8 +265,8 @@ async function getObjOfAnimalsBySex(userId) {
             models_1.default.Animal.findAndCountAll({
                 where: {
                     [sequelize_1.Op.or]: [
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Vaca },
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Vaquillona },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Vaca },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Vaquillona },
                     ],
                     is_pregnant: false,
                     UserId: userId,
@@ -275,8 +275,8 @@ async function getObjOfAnimalsBySex(userId) {
             models_1.default.Animal.findAndCountAll({
                 where: {
                     [sequelize_1.Op.or]: [
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Toro },
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Novillo },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Toro },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Novillo },
                     ],
                     UserId: userId,
                 },
@@ -284,8 +284,8 @@ async function getObjOfAnimalsBySex(userId) {
             models_1.default.Animal.findAndCountAll({
                 where: {
                     [sequelize_1.Op.or]: [
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Vaca },
-                        { type_of_animal: animal_types_1.ITypeOfAnimal.Vaquillona },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Vaca },
+                        { type_of_animal: Animal_1.ITypeOfAnimal.Vaquillona },
                     ],
                     UserId: userId,
                 },
@@ -308,7 +308,7 @@ exports.getObjOfAnimalsBySex = getObjOfAnimalsBySex;
 async function getObjOfAnimalsByTypeOfAnimal(userId) {
     try {
         let objOfAnimalsByType = {};
-        let arrayDeTiposDeAnimales = Object.values(animal_types_1.ITypeOfAnimal);
+        let arrayDeTiposDeAnimales = Object.values(Animal_1.ITypeOfAnimal);
         console.log(arrayDeTiposDeAnimales);
         for (let i = 0; i < arrayDeTiposDeAnimales.length; i++) {
             const element = arrayDeTiposDeAnimales[i];
@@ -318,8 +318,8 @@ async function getObjOfAnimalsByTypeOfAnimal(userId) {
                         UserId: userId,
                     },
                 }) });
-            if (element == animal_types_1.ITypeOfAnimal.Vaquillona ||
-                element === animal_types_1.ITypeOfAnimal.Vaca) {
+            if (element == Animal_1.ITypeOfAnimal.Vaquillona ||
+                element === Animal_1.ITypeOfAnimal.Vaca) {
                 let femaleAnimalsPregnant = await models_1.default.Animal.findAndCountAll({
                     where: {
                         is_pregnant: true,
