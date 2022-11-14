@@ -8,7 +8,7 @@ const Note_1 = require("./Note");
 exports.userSchema = new mongoose_1.Schema({
     _id: { type: String, required: true },
     name: { type: String, required: true },
-    email: { type: String, required: true, lowercase: true },
+    email: { type: String, required: true, lowercase: true, unique: true },
     profile_img: { type: String, required: false },
     animals: [Animal_1.animalSchema],
     notes: [Note_1.noteSchema],
