@@ -1,7 +1,6 @@
-import db from "../../models";
-import { IUser } from "../../types/user-types";
 import { isEmail } from "../../validators/generic-validators";
-import { User } from "../../mongoDB/setup";
+import { User } from "../../mongoDB/";
+import { IUser } from "../../mongoDB/models/User";
 
 export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
   if (!isEmail(emailFromReq)) {
