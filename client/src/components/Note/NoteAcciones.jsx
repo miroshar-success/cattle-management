@@ -26,7 +26,9 @@ export function NoteAcciones({ note }) {
       const note_id = e.target.value;
       console.log(note_id);
       dispatch(deleteNote(note_id, accessToken));
-      dispatch(getNotesFromUser(accessToken));
+      setTimeout(() => {
+        dispatch(getNotesFromUser(accessToken));
+      }, 1300);
     } else {
       console.log(
         `No se ha eliminado al animal porque confirmPrompt == ${confirmPrompt}`
