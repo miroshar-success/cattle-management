@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 // -------- MONGO / MONGOOSE : ------------
-import { User, Note, Animal } from "../../mongoDB/setup";
+import { User } from "../../mongoDB/";
 
 // GET ALL USERS :
 router.get("/", async (req, res) => {

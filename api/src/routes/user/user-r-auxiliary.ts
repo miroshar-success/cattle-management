@@ -1,7 +1,6 @@
-import db from "../../models";
-import { IUser } from "../../types/user-types";
 import { isEmail } from "../../validators/generic-validators";
-import { User } from "../../mongoDB/setup";
+import { User } from "../../mongoDB/";
+import { IUser } from "../../mongoDB/models/User";
 
 export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
   if (!isEmail(emailFromReq)) {
@@ -53,5 +52,22 @@ export async function throwErrorIfUserIsNotRegisteredInDB(
     throw new Error(
       `El usuario con id '${reqAuthSub}' no existe en la database.`
     );
+  }
+}
+
+export async function userExistsInDataBase(
+  reqAuthSub: string
+): Promise<boolean> {
+  try {
+    if (!reqAuthSub) {
+      throw new Error(
+        "No se ingresó un argumento en aux fn userExistsInDataBase"
+      );
+    }
+    const userExists = await User.exists({ _id: reqAuthSub });
+    if (userExists) return true;
+    return false;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 }

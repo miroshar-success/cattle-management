@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -25,11 +16,11 @@ const USER_ID_FER_AZU = process.env.USER_ID_FER_AZU;
 const router = (0, express_1.Router)();
 // ------- RUTAS : ---------
 // GET ALL FROM ANIMALS :
-router.get("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", jwtMiddleware_1.default, async (req, res) => {
     try {
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
-        const allAnimalsFromDB = yield models_1.default.Animal.findAll({
+        const allAnimalsFromDB = await models_1.default.Animal.findAll({
             where: {
                 UserId: userId,
             },
@@ -40,20 +31,20 @@ router.get("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0,
         console.log(`Error en "/animal/". ${error.message}`);
         return res.send({ error: error.message });
     }
-}));
+});
 // SEARCH BY QUERY :
-router.get("/search", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/search", jwtMiddleware_1.default, async (req, res) => {
     try {
         console.log(`Buscando por query...`);
         console.log(req.query);
         let queryValue = req.query.value;
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
-        yield (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
+        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
         if (typeof queryValue === "string") {
             queryValue.toLowerCase();
         }
-        const searchedResults = yield models_1.default.Animal.findAll({
+        const searchedResults = await models_1.default.Animal.findAll({
             where: {
                 [sequelize_1.Op.or]: [
                     { id_senasa: queryValue },
@@ -69,15 +60,15 @@ router.get("/search", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
     catch (error) {
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // GET BY ID_SENASA :
-router.get("/id/:id_senasa", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/id/:id_senasa", jwtMiddleware_1.default, async (req, res) => {
     try {
         const { id_senasa } = req.params;
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
         //Chequear si este where está bien puesto:
-        const foundAnimal = yield models_1.default.Animal.findOne({
+        const foundAnimal = await models_1.default.Animal.findOne({
             where: {
                 id_senasa: id_senasa,
                 UserId: userId,
@@ -96,13 +87,13 @@ router.get("/id/:id_senasa", jwtMiddleware_1.default, (req, res) => __awaiter(vo
         console.log(`Error en GET "/:id_senasa". ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // POST NEW ANIMAL JWTCHECK:
-router.post("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", jwtMiddleware_1.default, async (req, res) => {
     try {
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
-        yield (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
+        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
         // let userIsRegistered = await userIsRegisteredInDB(userId);
         // if (userIsRegistered !== true) {
         //   throw new Error(`No se encontró al usuario registrado en la DB`);
@@ -110,8 +101,8 @@ router.post("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0
         console.log(`REQ.BODY = `);
         console.log(req.body);
         const validatedNewAnimal = (0, animal_validators_1.checkAnimal)(req.body);
-        const newAnimalCreated = yield models_1.default.Animal.create(validatedNewAnimal);
-        yield newAnimalCreated.setUser(userId);
+        const newAnimalCreated = await models_1.default.Animal.create(validatedNewAnimal);
+        await newAnimalCreated.setUser(userId);
         console.log(`nuevo animal creado y asociado al usuario con id ${userId}`);
         return res
             .status(200)
@@ -121,9 +112,9 @@ router.post("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0
         console.log(`Error en POST 'user/'. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // UPDATE ANIMAL :
-router.put("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/", jwtMiddleware_1.default, async (req, res) => {
     try {
         console.log(`REQ.BODY = `);
         console.log(req.body);
@@ -133,9 +124,9 @@ router.put("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0,
         // if (userIsRegistered !== true) {
         //   throw new Error(`No se encontró al usuario registrado en la DB`);
         // }
-        yield (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
+        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
         const validatedAnimal = (0, animal_validators_1.checkAnimal)(req.body);
-        const updatedAnimal = yield models_1.default.Animal.update(Object.assign({}, validatedAnimal), {
+        const updatedAnimal = await models_1.default.Animal.update(Object.assign({}, validatedAnimal), {
             where: {
                 id_senasa: validatedAnimal.id_senasa,
                 UserId: userId,
@@ -151,9 +142,9 @@ router.put("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0,
         console.log(`Error en PUT "/animal". ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // DELETE ANIMAL :
-router.delete("/delete/:id_senasa", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/delete/:id_senasa", jwtMiddleware_1.default, async (req, res) => {
     try {
         console.log(`En delete por id...`);
         const reqAuth = req.auth;
@@ -162,8 +153,8 @@ router.delete("/delete/:id_senasa", jwtMiddleware_1.default, (req, res) => __awa
         if (!id_senasaFromParams) {
             throw new Error(`El id de senasa no puede ser falso.`);
         }
-        yield (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
-        let deletedAnimal = yield models_1.default.Animal.destroy({
+        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
+        let deletedAnimal = await models_1.default.Animal.destroy({
             where: {
                 id_senasa: id_senasaFromParams,
                 UserId: userId,
@@ -179,9 +170,9 @@ router.delete("/delete/:id_senasa", jwtMiddleware_1.default, (req, res) => __awa
         console.log(`Error en DELETE por id. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // GET TYPES OF ANIMAL ACCEPTED :
-router.get("/typesAllowed", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/typesAllowed", async (req, res) => {
     try {
         console.log(`Types of animals allowed: `);
         let typesOfAnimalsArray = (0, animal_r_auxiliary_1.typesOfAnimalsToArray)();
@@ -192,11 +183,11 @@ router.get("/typesAllowed", (req, res) => __awaiter(void 0, void 0, void 0, func
         console.log(`Error en GET 'animal/typesAllowed. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 //! PARSED FOR STATS: ------------------
 // GET ALL IS PREGNANT TRUE || FALSE & ORDERED BY DELIVERY DATE :
 //Ruta de ejemplo:  localhost:3001/animal/isPregnant?status=true&order=ASC
-router.get("/isPregnant", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/isPregnant", jwtMiddleware_1.default, async (req, res) => {
     try {
         // espero req.query.status = true || false
         //URL Ej:  /animal/isPregnant?status=true || false
@@ -207,27 +198,27 @@ router.get("/isPregnant", jwtMiddleware_1.default, (req, res) => __awaiter(void 
         let status = req.query.status;
         let statusParsed = (0, generic_validators_1.stringToBoolean)(status);
         let order = req.query.order; // ASC || DESC || NULLS FIRST
-        const querySearchResult = yield (0, animal_r_auxiliary_1.getAndParseIsPregnantQuery)(userId, statusParsed, order);
+        const querySearchResult = await (0, animal_r_auxiliary_1.getAndParseIsPregnantQuery)(userId, statusParsed, order);
         return res.status(200).send(querySearchResult);
     }
     catch (error) {
         console.log(`Error en '/animal/isPregnant. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
-router.get("/stats", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+router.get("/stats", jwtMiddleware_1.default, async (req, res) => {
     try {
         const reqAuth = req.auth;
         const userId = reqAuth.sub;
         let stats = {
-            allFoundAndCount: yield (0, animal_r_auxiliary_1.getObjOfAllAnimalsAndCount)(userId),
-            deviceType: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByDeviceType)(userId),
-            location: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByLocation)(userId),
-            races: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByRace)(userId),
-            pregnant: yield (0, animal_r_auxiliary_1.getObjOfAnimalsPregnant)(userId),
-            notPregnant: yield (0, animal_r_auxiliary_1.getObjOfAnimalsNotPregnant)(userId),
-            types: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByTypeOfAnimal)(userId),
-            sex: yield (0, animal_r_auxiliary_1.getObjOfAnimalsBySex)(userId),
+            allFoundAndCount: await (0, animal_r_auxiliary_1.getObjOfAllAnimalsAndCount)(userId),
+            deviceType: await (0, animal_r_auxiliary_1.getObjOfAnimalsByDeviceType)(userId),
+            location: await (0, animal_r_auxiliary_1.getObjOfAnimalsByLocation)(userId),
+            races: await (0, animal_r_auxiliary_1.getObjOfAnimalsByRace)(userId),
+            pregnant: await (0, animal_r_auxiliary_1.getObjOfAnimalsPregnant)(userId),
+            notPregnant: await (0, animal_r_auxiliary_1.getObjOfAnimalsNotPregnant)(userId),
+            types: await (0, animal_r_auxiliary_1.getObjOfAnimalsByTypeOfAnimal)(userId),
+            sex: await (0, animal_r_auxiliary_1.getObjOfAnimalsBySex)(userId),
             fetched: true,
         };
         console.log(`Devolviendo objeto stats...`);
@@ -237,17 +228,17 @@ router.get("/stats", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, vo
         console.log(`Error en GET 'animal/stats'. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 //! RUTA DE TESTEO DE VELOCIDAD ENTRE PROMISE.ALL y AWAITS.
 // PARECE SER QUE AWAIT ES MÁS RÁPIDO.... inesperadamente! Y más prolijo también.
-router.get("/stats2", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/stats2", async (req, res) => {
     // jwtCheck,
     try {
         const reqAuth = req.auth;
         // const userId = reqAuth.sub;
         const userId = USER_ID_FER_AZU;
         let initialTime = new Date().getTime();
-        const [allFoundAndCount, deviceType, location, races, pregnant, notPregnant, types, sex,] = yield Promise.all([
+        const [allFoundAndCount, deviceType, location, races, pregnant, notPregnant, types, sex,] = await Promise.all([
             (0, animal_r_auxiliary_1.getObjOfAllAnimalsAndCount)(userId),
             (0, animal_r_auxiliary_1.getObjOfAnimalsByDeviceType)(userId),
             (0, animal_r_auxiliary_1.getObjOfAnimalsByLocation)(userId),
@@ -275,14 +266,14 @@ router.get("/stats2", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         // CON AWAITS (PARECE SER MÁS RÁPIDO QUE CON PROMISE.ALL!!!!)
         let initialTimeAwaits = new Date().getTime();
         let stats = {
-            allFoundAndCount: yield (0, animal_r_auxiliary_1.getObjOfAllAnimalsAndCount)(userId),
-            deviceType: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByDeviceType)(userId),
-            location: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByLocation)(userId),
-            races: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByRace)(userId),
-            pregnant: yield (0, animal_r_auxiliary_1.getObjOfAnimalsPregnant)(userId),
-            notPregnant: yield (0, animal_r_auxiliary_1.getObjOfAnimalsNotPregnant)(userId),
-            types: yield (0, animal_r_auxiliary_1.getObjOfAnimalsByTypeOfAnimal)(userId),
-            sex: yield (0, animal_r_auxiliary_1.getObjOfAnimalsBySex)(userId),
+            allFoundAndCount: await (0, animal_r_auxiliary_1.getObjOfAllAnimalsAndCount)(userId),
+            deviceType: await (0, animal_r_auxiliary_1.getObjOfAnimalsByDeviceType)(userId),
+            location: await (0, animal_r_auxiliary_1.getObjOfAnimalsByLocation)(userId),
+            races: await (0, animal_r_auxiliary_1.getObjOfAnimalsByRace)(userId),
+            pregnant: await (0, animal_r_auxiliary_1.getObjOfAnimalsPregnant)(userId),
+            notPregnant: await (0, animal_r_auxiliary_1.getObjOfAnimalsNotPregnant)(userId),
+            types: await (0, animal_r_auxiliary_1.getObjOfAnimalsByTypeOfAnimal)(userId),
+            sex: await (0, animal_r_auxiliary_1.getObjOfAnimalsBySex)(userId),
             fetched: true,
         };
         let finalTimeAwaits = new Date().getTime();
@@ -300,9 +291,9 @@ router.get("/stats2", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         console.log(`Error en GET 'animal/stats'. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 //! ---- TESTING SEQUELIZE RESULTS: ----------------
-router.get("/ts1", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/ts1", async (req, res) => {
     try {
         let initialTime = new Date().getTime();
         console.log(initialTime);
@@ -317,7 +308,7 @@ router.get("/ts1", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (error) {
         return res.status(400).send({ error: error.message });
     }
-}));
+});
 // router.get("/testing", async (req, res) => {
 //   try {
 //     const grouped = await db.Animal.findAll({

@@ -21,3 +21,13 @@ export interface INoteMDB {
   importance?: EImportance;
   UserId?: string;
 }
+
+// --- probando interface con noteSchema:
+import { Document } from "mongoose";
+
+export interface INoteM {
+  title?: string;
+  theme?: string;
+  comment: string;
+  importance?: string;
+}

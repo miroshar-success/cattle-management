@@ -4,10 +4,7 @@ import { IAnimal, ITypeOfAnimal } from "../../types/animal-types";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
 import { IReqAuth } from "../../types/user-types";
-import {
-  throwErrorIfUserIsNotRegisteredInDB,
-  userIsRegisteredInDB,
-} from "../user/user-r-auxiliary";
+import { throwErrorIfUserIsNotRegisteredInDB } from "../user/user-r-auxiliary";
 import { Op } from "sequelize";
 import {
   getAndParseIsPregnantQuery,
@@ -22,7 +19,6 @@ import {
   typesOfAnimalsToArray,
 } from "./animal-r-auxiliary";
 import { stringToBoolean } from "../../validators/generic-validators";
-import sequelize from "sequelize";
 require("dotenv").config();
 const USER_ID_FER_AZU = process.env.USER_ID_FER_AZU;
 const router = Router();
