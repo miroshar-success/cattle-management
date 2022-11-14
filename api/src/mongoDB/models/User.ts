@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { animalSchema, IAnimal } from "./Animal";
 import { INote, noteSchema } from "./Note";
 

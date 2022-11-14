@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import LogWithColors from "../miscellanea/LogWithColor";
 
+import mongoose from "mongoose";
 //* ---- connect to MongoDB ------
 import { config } from "../config/configMDB";
-import LogWithColors from "./Logging";
 
 mongoose
   .connect(config.mongo.url)

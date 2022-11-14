@@ -1,6 +1,6 @@
 import db from "../../models";
 import { checkAnimal } from "../../validators/animal-validators";
-import { IAnimal, ITypeOfAnimal } from "../../types/animal-types";
+import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
 import { IReqAuth } from "../../types/user-types";
