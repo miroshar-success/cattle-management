@@ -1,4 +1,3 @@
-import { INote } from "../../types/note-types";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
 import { IReqAuth } from "../../types/user-types";
@@ -6,6 +5,7 @@ import { throwErrorIfUserIsNotRegisteredInDB } from "../user/user-r-auxiliary";
 import { validateNewNoteMDB } from "../../validators/note-validators";
 import { getAllNotesFromUser } from "./note-r-auxiliary";
 import { Note, User } from "../../mongoDB/";
+import { INote } from "../../mongoDB/models/Note";
 
 const router = Router();
 
@@ -31,7 +31,7 @@ router.post("/newNote", jwtCheck, async (req: any, res) => {
       console.log("nota pusheada...");
 
       await notesOwner.save();
-    
+
       return res.status(200).send(checkedNoteObj);
     } else {
       return res

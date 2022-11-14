@@ -71,3 +71,12 @@ export async function userExistsInDataBase(
     throw new Error(error.message);
   }
 }
+
+export async function getUserByIdOrThrowError(userId: string) {
+  let userFromDB = await User.findById(userId);
+  if (userFromDB !== null) {
+    return userFromDB;
+  } else {
+    throw new Error("Usuario no encontrado en la base de datos.");
+  }
+}

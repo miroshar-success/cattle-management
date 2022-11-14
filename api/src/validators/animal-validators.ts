@@ -1,4 +1,4 @@
-import { IAnimal, ITypeOfAnimal } from "../types/animal-types";
+import { IAnimal, ITypeOfAnimal } from "../mongoDB/models/Animal";
 import {
   isFalsyArgument,
   isStringBetween1And50CharsLong,
@@ -16,7 +16,9 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
   try {
     console.log(`Checking Animal...`);
     const checkedAnimal = {
+      _id: checkId(bodyFromReq.id_senasa),
       id_senasa: checkId(bodyFromReq.id_senasa),
+      UserId: bodyFromReq.userId,
       type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
       breed_name: checkBreedName(bodyFromReq.breed_name),
       location: checkLocation(bodyFromReq.location),
@@ -24,9 +26,10 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
       name: checkName(bodyFromReq.name),
       device_type: checkDeviceType(bodyFromReq.device_type),
       device_number: checkDeviceNumber(bodyFromReq.device_number),
-      image_1: checkImage(bodyFromReq.image_1),
-      image_2: checkImage(bodyFromReq.image_2),
-      image_3: checkImage(bodyFromReq.image_3),
+      images: checkImages(bodyFromReq.images),
+      // image_1: checkImage(bodyFromReq.image_1),
+      // image_2: checkImage(bodyFromReq.image_2),
+      // image_3: checkImage(bodyFromReq.image_3),
       comments: checkComments(bodyFromReq.comments),
       birthday: checkBirthday(bodyFromReq.birthday),
       is_pregnant: checkIsPregnant(bodyFromReq.is_pregnant),
@@ -37,6 +40,25 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
     console.log(`Error en fn checkNewAnimal. ${error.message}`);
     throw new Error(error.message);
   }
+}
+
+// CHECK IMAGES :
+function checkImages(imagesArrayFromReq: string[]): string[] | [void] {
+  let imagesChecked: string[] = [];
+  if (isFalsyArgument(imagesArrayFromReq)) {
+    return [];
+  }
+  if (Array.isArray(imagesArrayFromReq) && imagesArrayFromReq.length === 0) {
+    return [];
+  }
+  if (Array.isArray(imagesArrayFromReq) && imagesArrayFromReq.length > 0) {
+    imagesArrayFromReq.forEach((image) => {
+      if (isValidURLImage(image)) {
+        imagesChecked.push(image);
+      }
+    });
+  }
+  return imagesChecked;
 }
 
 // CHECK DEVICE_TYPE :

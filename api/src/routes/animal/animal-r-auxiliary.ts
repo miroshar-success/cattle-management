@@ -1,6 +1,6 @@
 import sequelize, { Op } from "sequelize";
 import db from "../../models";
-import { IAnimal, ITypeOfAnimal } from "../../types/animal-types";
+import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
 
 // TYPES OF ANIMALS TO ARRAY :
 export function typesOfAnimalsToArray(): string[] {

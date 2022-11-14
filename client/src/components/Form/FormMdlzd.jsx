@@ -19,6 +19,7 @@ export function FormMdlzd({ closeModal, animal }) {
     name: animal?.name || "",
     device_type: animal?.device_type || "",
     device_number: animal?.device_number || "",
+    images: animal?.images || [],
     image_1: animal?.image_1 || "",
     image_2: animal?.image_2 || "",
     image_3: animal?.image_3 || "",
@@ -34,7 +35,9 @@ export function FormMdlzd({ closeModal, animal }) {
     dispatch(animalActions.getTypesOfAnimalsAllowed());
   }, [dispatch]);
 
-  const typesOfAnimalsState = useSelector((state) => state.animals.typesOfAnimals);
+  const typesOfAnimalsState = useSelector(
+    (state) => state.animals.typesOfAnimals
+  );
   const accessToken = localStorage.getItem("tokenCattleTracker");
 
   // HANDLE FUNCTIONS:
@@ -182,10 +185,16 @@ export function FormMdlzd({ closeModal, animal }) {
       { method: "POST", body: data }
     );
     const dataNew = await response.json();
+    //! Meto al arreglo PROVISORIOOO DE PRUEBA!!!:
     setLocalState({
       ...localState,
-      [e.target.name]: dataNew.secure_url,
+      images: [...localState.images, dataNew.secure_url],
     });
+    //!----
+    // setLocalState({
+    //   ...localState,
+    //   [e.target.name]: dataNew.secure_url,
+    // });
     // reemplazar con un mensaje de éxito o la acción deseada
     console.log("Imagen cargada correctamente.");
   };

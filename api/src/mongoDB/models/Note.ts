@@ -1,7 +1,7 @@
 import { Types, Schema } from "mongoose";
 
 export interface INote {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   title?: string;
   theme?: string;
   comment: string;
