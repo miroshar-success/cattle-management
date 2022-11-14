@@ -24,7 +24,7 @@ app.use("/note", noteRouter);
 
 // for testing:
 app.get("/", (req, res) => {
-  return res.send("Yep! I'm listening your requests...");
+  return res.send("Yep! I'm listening to your requests...");
 });
 
 app.get("/auth", jwtCheck, (req: any, res) => {
