@@ -55,3 +55,20 @@ export async function throwErrorIfUserIsNotRegisteredInDB(
     );
   }
 }
+
+export async function userExistsInDataBase(
+  reqAuthSub: string
+): Promise<boolean> {
+  try {
+    if (!reqAuthSub) {
+      throw new Error(
+        "No se ingresó un argumento en aux fn userExistsInDataBase"
+      );
+    }
+    const userExists = await User.exists({ _id: reqAuthSub });
+    if (userExists) return true;
+    return false;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
