@@ -8,21 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllNotesFromUser = void 0;
-const models_1 = __importDefault(require("../../models"));
+const setup_1 = require("../../mongoDB/setup");
 function getAllNotesFromUser(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const allNotesFromUser = yield models_1.default.Note.findAll({
-                where: {
-                    UserId: userId,
-                },
-            });
-            return allNotesFromUser;
+            let userFound = yield setup_1.User.findById(userId);
+            if (userFound !== null) {
+                let allNotesFromUser = userFound.notes;
+                return allNotesFromUser;
+            }
+            throw new Error(`No se encontró al usuario en la base de datos.`);
         }
         catch (error) {
             throw new Error(error.message);

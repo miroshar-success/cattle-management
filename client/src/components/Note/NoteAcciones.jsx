@@ -26,7 +26,9 @@ export function NoteAcciones({ note }) {
       const note_id = e.target.value;
       console.log(note_id);
       dispatch(deleteNote(note_id, accessToken));
-      dispatch(getNotesFromUser(accessToken));
+      setTimeout(() => {
+        dispatch(getNotesFromUser(accessToken));
+      }, 1300);
     } else {
       console.log(
         `No se ha eliminado al animal porque confirmPrompt == ${confirmPrompt}`
@@ -46,12 +48,12 @@ export function NoteAcciones({ note }) {
           <TbListDetails />
         </Link>
       </button>
-      <button className="btn-edit" value={note?.id} onClick={showModal}>
+      <button className="btn-edit" value={note?._id} onClick={showModal}>
         <BiEditAlt />
       </button>
       <button
         className="btn-delete"
-        value={note?.id}
+        value={note?._id}
         onClick={handleDeleteWithPrompt}
       >
         {/* <MdDeleteOutline /> */} X
