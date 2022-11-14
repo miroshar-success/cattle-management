@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateNewNote = void 0;
+exports.validateNewNoteMDB = void 0;
 const note_types_1 = require("../types/note-types");
 const generic_validators_1 = require("./generic-validators");
-function validateNewNote(bodyFromReq) {
+function validateNewNoteMDB(bodyFromReq) {
     console.log("Validando nota con contenido del req.body");
     let newNoteObj = {
+        // _id: bodyFromReq._id,
         title: checkTitle(bodyFromReq.title),
         theme: checkTheme(bodyFromReq.theme),
         comment: checkComment(bodyFromReq.comment),
@@ -13,7 +14,7 @@ function validateNewNote(bodyFromReq) {
     };
     return newNoteObj;
 }
-exports.validateNewNote = validateNewNote;
+exports.validateNewNoteMDB = validateNewNoteMDB;
 function checkTitle(titleFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(titleFromReq)) {
         return undefined;
