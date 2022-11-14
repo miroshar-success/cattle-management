@@ -24,7 +24,7 @@ app.use("/user", user_routes_1.default);
 app.use("/note", note_routes_1.default);
 // for testing:
 app.get("/", (req, res) => {
-    return res.send("Yep! I'm listening your requests...");
+    return res.send("Yep! I'm listening to your requests...");
 });
 app.get("/auth", jwtMiddleware_1.default, (req, res) => {
     try {
