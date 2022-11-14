@@ -5,7 +5,11 @@ import { useDispatch } from "react-redux";
 import { resetDetail } from "../../redux/features/animals";
 
 export default function DetailCard({ animal }) {
-  const images = [animal?.image_1, animal?.image_2, animal?.image_3];
+  const images = [
+    animal?.images?.[0],
+    animal?.images?.[1],
+    animal?.images?.[2],
+  ];
 
   const dispatch = useDispatch();
 
@@ -34,9 +38,7 @@ export default function DetailCard({ animal }) {
         <div className=" relative h-56   sm:h-64 xl:h-80 ">
           <ImgDetail img={img} />
         </div>
-        {imagesParsed[0] === null &&
-        imagesParsed[1] === null &&
-        imagesParsed[2] === null ? null : (
+        {!imagesParsed[0] && !imagesParsed[1] && !imagesParsed[2] ? null : (
           <>
             {/* Slider Controls */}
             {index > 0 && (
