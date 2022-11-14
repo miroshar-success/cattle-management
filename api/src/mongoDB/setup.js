@@ -15,14 +15,6 @@ const noteSchema = new Schema({
   comment: String,
   importance: String,
 });
-const userSchema = new Schema({
-  _id: { type: String, required: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  profile_img: { type: String, required: false },
-  animals: [],
-  notes: [noteSchema],
-});
 
 const animalSchema = new Schema({
   _id: { type: String, required: true },
@@ -39,6 +31,15 @@ const animalSchema = new Schema({
   is_pregnant: Boolean,
   delivery_date: { type: Date, required: false },
   UserId: { type: String, required: true },
+});
+
+const userSchema = new Schema({
+  _id: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  profile_img: { type: String, required: false },
+  animals: [animalSchema],
+  notes: [noteSchema],
 });
 
 export const User = mongoose.model("User", userSchema);
