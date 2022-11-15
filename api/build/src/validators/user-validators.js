@@ -1,41 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkProfileImg = exports.checkEmail = exports.checkUserMDB = exports.checkUser = void 0;
+exports.checkProfileImg = exports.checkEmail = exports.validateNewUser = void 0;
 const generic_validators_1 = require("./generic-validators");
-function checkUser(idFromReq, nameFromReq, emailFromReq, profile_img) {
-    console.log(`Checking User...`);
+function validateNewUser(idFromReq, nameFromReq, emailFromReq, profile_img) {
     try {
-        const checkedUser = {
-            id: checkUserId(idFromReq),
-            name: checkUserName(nameFromReq),
-            email: checkEmail(emailFromReq),
-            profile_img: checkProfileImg(profile_img),
-        };
-        return checkedUser;
-    }
-    catch (error) {
-        console.log(`Error en fn checkUser. ${error.message}`);
-        throw new Error(error.message);
-    }
-}
-exports.checkUser = checkUser;
-function checkUserMDB(idFromReq, nameFromReq, emailFromReq, profile_img) {
-    console.log(`Checking User...`);
-    try {
-        const checkedUser = {
+        console.log(`Validating new user...`);
+        const validatedNewUser = {
             _id: checkUserId(idFromReq),
             name: checkUserName(nameFromReq),
             email: checkEmail(emailFromReq),
             profile_img: checkProfileImg(profile_img),
+            animals: [],
+            animalsPop: [],
+            notes: [],
         };
-        return checkedUser;
+        return validatedNewUser;
     }
     catch (error) {
-        console.log(`Error en fn checkUser. ${error.message}`);
-        throw new Error(error.message);
+        throw new Error("Error al validar el nuevo usuario.");
     }
 }
-exports.checkUserMDB = checkUserMDB;
+exports.validateNewUser = validateNewUser;
 // CHECK USER ID :
 function checkUserId(idFromReq) {
     if ((0, generic_validators_1.isStringBetween1And101CharsLong)(idFromReq)) {

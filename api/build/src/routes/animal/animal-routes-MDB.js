@@ -3,12 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = __importDefault(require("../../models"));
 const animal_validators_1 = require("../../validators/animal-validators");
 const jwtMiddleware_1 = __importDefault(require("../../config/jwtMiddleware"));
 const express_1 = require("express");
 const user_r_auxiliary_1 = require("../user/user-r-auxiliary");
-const sequelize_1 = require("sequelize");
 const animal_r_auxiliary_1 = require("./animal-r-auxiliary");
 const generic_validators_1 = require("../../validators/generic-validators");
 // MDB:
@@ -41,17 +39,18 @@ router.get("/", jwtMiddleware_1.default, async (req, res) => {
 router.post("/", jwtMiddleware_1.default, async (req, res) => {
     try {
         const reqAuth = req.auth;
-        const userId = reqAuth.sub;
-        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
-        const userInDB = await (0, user_r_auxiliary_1.getUserByIdOrThrowError)(userId);
+        const user_id = reqAuth.sub;
+        await (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(user_id);
+        const userInDB = await (0, user_r_auxiliary_1.getUserByIdOrThrowError)(user_id);
         // const userInDB = await User.findById(userId)
         console.log(`REQ.BODY = `);
         console.log(req.body);
-        const validatedNewAnimal = (0, animal_validators_1.checkAnimal)(Object.assign(Object.assign({}, req.body), { userId }));
+        const validatedNewAnimal = (0, animal_validators_1.checkAnimal)(Object.assign(Object.assign({}, req.body), { user_id }));
         const newAnimalCreated = await mongoDB_1.Animal.create(validatedNewAnimal);
         userInDB === null || userInDB === void 0 ? void 0 : userInDB.animals.push(newAnimalCreated);
+        userInDB.animalsPop.push(newAnimalCreated._id);
         await userInDB.save();
-        console.log(`nuevo animal creado y pusheado al usuario con id ${userId}`);
+        console.log(`nuevo animal creado y pusheado al usuario con id ${user_id}`);
         return res
             .status(200)
             .send({ msg: "Animal creado correctamente.", animal: newAnimalCreated });
@@ -165,8 +164,7 @@ router.get("/typesAllowed", async (req, res) => {
         return res.status(400).send({ error: error.message });
     }
 });
-//! ------- RUTAS SEQUELIZE : ---------
-// SEARCH BY QUERY :
+// SEARCH BY QUERY EN DESARROLLO EXPERIMENTAL:
 router.get("/search", jwtMiddleware_1.default, async (req, res) => {
     try {
         console.log(`Buscando por query...`);
@@ -178,23 +176,82 @@ router.get("/search", jwtMiddleware_1.default, async (req, res) => {
         if (typeof queryValue === "string") {
             queryValue.toLowerCase();
         }
-        const searchedResults = await models_1.default.Animal.findAll({
-            where: {
-                [sequelize_1.Op.or]: [
-                    { id_senasa: queryValue },
-                    { name: queryValue },
-                    { device_number: queryValue },
-                ],
-                UserId: userId,
-            },
+        // buscar adentro de User con forEach :
+        const userInDB = await mongoDB_1.User.findById(userId);
+        if (userInDB === null) {
+            throw new Error("Usuario no encontrado");
+        }
+        console.log("usuario encontrado");
+        const userAnimals = userInDB.animals;
+        let animalesMatched = [];
+        userAnimals.forEach((element) => {
+            if (element.id_senasa === queryValue ||
+                element.name === queryValue ||
+                element.device_number === queryValue) {
+                animalesMatched.push(element);
+            }
         });
-        console.log(`Largo de searchedResults = ${searchedResults === null || searchedResults === void 0 ? void 0 : searchedResults.length}`);
-        return res.status(200).send(searchedResults);
+        console.log("ANIMALS FOUND = ", animalesMatched);
+        console.log("animalesMatched.length =", animalesMatched.length);
+        // buscar en collection Animal :
+        const multiQuery = await mongoDB_1.Animal.find({
+            $and: [
+                { UserId: userId },
+                {
+                    $or: [
+                        { id_senasa: queryValue },
+                        { name: queryValue },
+                        { device_number: queryValue },
+                    ],
+                },
+            ],
+        });
+        const multiQuery2 = await mongoDB_1.Animal.where({ UserId: userId }).where({
+            $or: [
+                { id_senasa: queryValue },
+                { name: queryValue },
+                { device_number: queryValue },
+            ],
+        });
+        // const fetchedAnimals = await Animal.where("name").equals(queryValue);
+        // console.log(fetchedAnimals);
+        console.log("MQ = ", multiQuery.length);
+        console.log("MQ2 = ", multiQuery2.length);
+        return res.status(200).send(multiQuery);
     }
     catch (error) {
         return res.status(400).send({ error: error.message });
     }
 });
+//! ------- RUTAS SEQUELIZE : ---------
+// SEARCH BY QUERY :
+// router.get("/search", jwtCheck, async (req: any, res) => {
+//   try {
+//     console.log(`Buscando por query...`);
+//     console.log(req.query);
+//     let queryValue = req.query.value;
+//     const reqAuth: IReqAuth = req.auth;
+//     const userId = reqAuth.sub;
+//     await throwErrorIfUserIsNotRegisteredInDB(userId);
+//     if (typeof queryValue === "string") {
+//       queryValue.toLowerCase();
+//     }
+//     const searchedResults: IAnimal[] = await db.Animal.findAll({
+//       where: {
+//         [Op.or]: [
+//           { id_senasa: queryValue },
+//           { name: queryValue },
+//           { device_number: queryValue },
+//         ],
+//         UserId: userId,
+//       },
+//     });
+//     console.log(`Largo de searchedResults = ${searchedResults?.length}`);
+//     return res.status(200).send(searchedResults);
+//   } catch (error: any) {
+//     return res.status(400).send({ error: error.message });
+//   }
+// });
 //! PARSED FOR STATS: ------------------
 // GET ALL IS PREGNANT TRUE || FALSE & ORDERED BY DELIVERY DATE :
 //Ruta de ejemplo:  localhost:3001/animal/isPregnant?status=true&order=ASC

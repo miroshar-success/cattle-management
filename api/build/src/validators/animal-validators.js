@@ -13,7 +13,7 @@ function checkAnimal(bodyFromReq) {
         const checkedAnimal = {
             _id: checkId(bodyFromReq.id_senasa),
             id_senasa: checkId(bodyFromReq.id_senasa),
-            UserId: bodyFromReq.userId,
+            UserId: bodyFromReq.user_id,
             type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
             breed_name: checkBreedName(bodyFromReq.breed_name),
             location: checkLocation(bodyFromReq.location),
