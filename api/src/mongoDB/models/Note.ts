@@ -14,9 +14,8 @@ export enum EImportance {
   Baja = "Baja",
 }
 
-export const noteSchema: Schema = new Schema(
+export const noteSchema: Schema = new Schema<INote>(
   {
-    // _id: String,
     title: String,
     theme: String,
     comment: { type: String, required: true },

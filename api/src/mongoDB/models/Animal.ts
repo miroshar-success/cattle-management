@@ -18,6 +18,7 @@ export interface IAnimal {
   birthday?: string;
   is_pregnant?: boolean;
   delivery_date?: string;
+  UserId: string;
 }
 
 export enum ITypeOfAnimal {
@@ -27,11 +28,11 @@ export enum ITypeOfAnimal {
   Vaca = "Vaca",
 }
 
-export const animalSchema: Schema = new Schema(
+export const animalSchema: Schema = new Schema<IAnimal>(
   {
     _id: { type: String, required: true },
     id_senasa: { type: String, required: true, inmutable: true },
-    type_of_animal: { type: String, required: true },
+    type_of_animal: { type: String, enum: ITypeOfAnimal, required: true },
     breed_name: { type: String, required: false },
     location: String,
     weight_kg: { type: Number, min: 0, max: 3000 },

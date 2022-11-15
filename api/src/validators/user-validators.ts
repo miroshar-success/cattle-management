@@ -1,3 +1,4 @@
+import { INewUser } from "../mongoDB/models/User";
 import { IUser, IUserMDB } from "../types/user-types";
 import {
   isEmail,
@@ -7,45 +8,26 @@ import {
   isValidURLImage,
 } from "./generic-validators";
 
-export function checkUser(
+export function validateNewUser(
   idFromReq: any,
   nameFromReq: any,
   emailFromReq: any,
   profile_img: any
-): IUser {
-  console.log(`Checking User...`);
+): INewUser {
   try {
-    const checkedUser: IUser = {
-      id: checkUserId(idFromReq),
-      name: checkUserName(nameFromReq),
-      email: checkEmail(emailFromReq),
-      profile_img: checkProfileImg(profile_img),
-    };
-    return checkedUser;
-  } catch (error: any) {
-    console.log(`Error en fn checkUser. ${error.message}`);
-    throw new Error(error.message);
-  }
-}
-
-export function checkUserMDB(
-  idFromReq: any,
-  nameFromReq: any,
-  emailFromReq: any,
-  profile_img: any
-): IUserMDB {
-  console.log(`Checking User...`);
-  try {
-    const checkedUser: IUserMDB = {
+    console.log(`Validating new user...`);
+    const validatedNewUser: INewUser = {
       _id: checkUserId(idFromReq),
       name: checkUserName(nameFromReq),
       email: checkEmail(emailFromReq),
       profile_img: checkProfileImg(profile_img),
+      animals: [],
+      animalsPop: [],
+      notes: [],
     };
-    return checkedUser;
-  } catch (error: any) {
-    console.log(`Error en fn checkUser. ${error.message}`);
-    throw new Error(error.message);
+    return validatedNewUser;
+  } catch (error) {
+    throw new Error("Error al validar el nuevo usuario.");
   }
 }
 

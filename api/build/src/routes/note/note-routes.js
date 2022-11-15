@@ -10,17 +10,19 @@ const note_validators_1 = require("../../validators/note-validators");
 const note_r_auxiliary_1 = require("./note-r-auxiliary");
 const mongoDB_1 = require("../../mongoDB/");
 const router = (0, express_1.Router)();
+// - - - - - - - - - - RUTAS : - - - - - - - - - -
+// POST NEW NOTE :
 router.post("/newNote", jwtMiddleware_1.default, async (req, res) => {
     var _a;
     try {
         console.log("NEW NOTE BODY = ", req.body);
         const reqAuth = req.auth;
-        const userId = reqAuth.sub;
-        (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(userId);
+        const user_id = reqAuth.sub;
+        (0, user_r_auxiliary_1.throwErrorIfUserIsNotRegisteredInDB)(user_id);
         let checkedNoteObj = (0, note_validators_1.validateNewNoteMDB)(req.body);
         console.log("Nota validada...");
         // const newNote = await db.Note.create(checkedNoteObj);
-        let notesOwner = await mongoDB_1.User.findById(userId);
+        let notesOwner = await mongoDB_1.User.findById(user_id);
         if (notesOwner) {
             console.log("usuario encontrado por id...");
             console.log(notesOwner);
@@ -29,11 +31,11 @@ router.post("/newNote", jwtMiddleware_1.default, async (req, res) => {
             (_a = notesOwner === null || notesOwner === void 0 ? void 0 : notesOwner.notes) === null || _a === void 0 ? void 0 : _a.push(nuevaNota);
             console.log("nota pusheada...");
             await notesOwner.save();
-            return res.status(200).send(checkedNoteObj);
+            return res.status(201).send(checkedNoteObj);
         }
         else {
             return res
-                .status(400)
+                .status(404)
                 .send({ error: "No se encontró al usuario en la base de datos." });
         }
     }
@@ -42,6 +44,7 @@ router.post("/newNote", jwtMiddleware_1.default, async (req, res) => {
         return res.status(400).send({ error: error.message });
     }
 });
+// GET ALL NOTES FROM USER :
 router.get("/all", jwtMiddleware_1.default, async (req, res) => {
     try {
         const reqAuth = req.auth;
@@ -55,6 +58,7 @@ router.get("/all", jwtMiddleware_1.default, async (req, res) => {
         return res.status(400).send({ error: error.message });
     }
 });
+// DELETE NOTE :
 router.delete("/:id", jwtMiddleware_1.default, async (req, res) => {
     var _a;
     console.log(`EN RUTA DELETE :ID`);
@@ -87,6 +91,7 @@ router.delete("/:id", jwtMiddleware_1.default, async (req, res) => {
         return res.status(400).send({ error: error.message });
     }
 });
+// UPDATE NOTE :
 router.put("/", jwtMiddleware_1.default, async (req, res) => {
     try {
         console.log(req.body);
@@ -100,15 +105,18 @@ router.put("/", jwtMiddleware_1.default, async (req, res) => {
         if (foundUser) {
             let noteToUpdate = foundUser === null || foundUser === void 0 ? void 0 : foundUser.notes.id(noteId);
             if (noteToUpdate) {
-                noteToUpdate.title = req.body.title;
-                noteToUpdate.comment = req.body.comment;
-                noteToUpdate.theme = req.body.theme;
-                noteToUpdate.importance = req.body.importance;
+                noteToUpdate.title = validatedNote.title;
+                noteToUpdate.comment = validatedNote.comment;
+                noteToUpdate.theme = validatedNote.theme;
+                noteToUpdate.importance = validatedNote.importance;
                 console.log("noteToUpdate Updated = ", noteToUpdate);
                 await foundUser.save();
+                console.log("USER AFTER SAVE = ", foundUser);
+                return res.status(201).send({ updated: 1, msg: "Nota actualizada." });
             }
-            console.log("USER AFTER SAVE = ", foundUser);
-            return res.status(200).send({ updated: 1, msg: "Notaaaa ddbb MOngoo" });
+            else {
+                throw new Error("Nota a editar no encontrada.");
+            }
         }
         else {
             throw new Error("No se ha encontrado al usuario en la base de datos.");

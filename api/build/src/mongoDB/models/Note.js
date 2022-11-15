@@ -9,10 +9,9 @@ var EImportance;
     EImportance["Baja"] = "Baja";
 })(EImportance = exports.EImportance || (exports.EImportance = {}));
 exports.noteSchema = new mongoose_1.Schema({
-    // _id: String,
     title: String,
     theme: String,
     comment: { type: String, required: true },
-    importance: String,
+    importance: { type: String, enum: EImportance, required: false },
 }, { timestamps: true });
 // const Note = mongoose.model<INote>("Note", noteSchema);

@@ -9,17 +9,20 @@ import { INote } from "../../mongoDB/models/Note";
 
 const router = Router();
 
+// - - - - - - - - - - RUTAS : - - - - - - - - - -
+
+// POST NEW NOTE :
 router.post("/newNote", jwtCheck, async (req: any, res) => {
   try {
     console.log("NEW NOTE BODY = ", req.body);
-    const reqAuth = req.auth;
-    const userId = reqAuth.sub;
-    throwErrorIfUserIsNotRegisteredInDB(userId);
+    const reqAuth: IReqAuth = req.auth;
+    const user_id = reqAuth.sub;
+    throwErrorIfUserIsNotRegisteredInDB(user_id);
     let checkedNoteObj = validateNewNoteMDB(req.body);
     console.log("Nota validada...");
 
     // const newNote = await db.Note.create(checkedNoteObj);
-    let notesOwner = await User.findById(userId);
+    let notesOwner = await User.findById(user_id);
     if (notesOwner) {
       console.log("usuario encontrado por id...");
       console.log(notesOwner);
@@ -44,6 +47,7 @@ router.post("/newNote", jwtCheck, async (req: any, res) => {
   }
 });
 
+// GET ALL NOTES FROM USER :
 router.get("/all", jwtCheck, async (req: any, res) => {
   try {
     const reqAuth = req.auth;
@@ -57,6 +61,7 @@ router.get("/all", jwtCheck, async (req: any, res) => {
   }
 });
 
+// DELETE NOTE :
 router.delete("/:id", jwtCheck, async (req: any, res) => {
   console.log(`EN RUTA DELETE :ID`);
 
@@ -89,6 +94,7 @@ router.delete("/:id", jwtCheck, async (req: any, res) => {
   }
 });
 
+// UPDATE NOTE :
 router.put("/", jwtCheck, async (req: any, res) => {
   try {
     console.log(req.body);
@@ -110,9 +116,11 @@ router.put("/", jwtCheck, async (req: any, res) => {
         noteToUpdate.importance = validatedNote.importance;
         console.log("noteToUpdate Updated = ", noteToUpdate);
         await foundUser.save();
+        console.log("USER AFTER SAVE = ", foundUser);
+        return res.status(201).send({ updated: 1, msg: "Nota actualizada." });
+      } else {
+        throw new Error("Nota a editar no encontrada.");
       }
-      console.log("USER AFTER SAVE = ", foundUser);
-      return res.status(201).send({ updated: 1, msg: "Nota actualizada." });
     } else {
       throw new Error("No se ha encontrado al usuario en la base de datos.");
     }
