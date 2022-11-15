@@ -2,7 +2,7 @@
 
 Repository meant to be just a practice exercise through the creation of a CRUD full-stack app with OAuth2.0 incorporated.
 
-## How to run the front end:
+## How to run the front-end:
 
 From the main directory, follow this commands:
 cd client/
