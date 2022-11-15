@@ -1,24 +1,20 @@
-import { IReqAuth, IUser, IUserMDB } from "../../types/user-types";
-import { checkUser, checkUserMDB } from "../../validators/user-validators";
+import { IReqAuth } from "../../types/user-types";
+import { validateNewUser } from "../../validators/user-validators";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
-import {
-  emailExistsInDataBase,
-  throwErrorIfUserIsNotRegisteredInDB,
-  userIsRegisteredInDB,
-} from "./user-r-auxiliary";
+import { emailExistsInDataBase } from "./user-r-auxiliary";
 
 const router = Router();
 
 // -------- MONGO / MONGOOSE : ------------
 import { User } from "../../mongoDB/";
+import { INewUser, IUser } from "../../mongoDB/models/User";
 
 // GET ALL USERS :
 router.get("/", async (req, res) => {
   try {
-    const usuarios = await User.find();
-    // const allUserFromDB = await db.User.findAll();
-    return res.status(200).send(usuarios);
+    const users: IUser[] = await User.find();
+    return res.status(200).send(users);
   } catch (error: any) {
     console.log(`Error en ruta GET "user/". ${error.message}`);
     return res.status(400).send({ error: error.message });
@@ -34,7 +30,12 @@ router.post("/register", jwtCheck, async (req: any, res) => {
     const _id = reqAuth.sub;
     const { name, email, profile_img } = req.body;
     await emailExistsInDataBase(email);
-    const validatedUser: IUserMDB = checkUserMDB(_id, name, email, profile_img);
+    const validatedUser: INewUser = validateNewUser(
+      _id,
+      name,
+      email,
+      profile_img
+    );
 
     const newUser = await User.create(validatedUser);
     console.log(newUser);

@@ -54,18 +54,18 @@ router.get("/", jwtCheck, async (req: any, res) => {
 router.post("/", jwtCheck, async (req: any, res) => {
   try {
     const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-    await throwErrorIfUserIsNotRegisteredInDB(userId);
-    const userInDB = await getUserByIdOrThrowError(userId);
+    const user_id = reqAuth.sub;
+    await throwErrorIfUserIsNotRegisteredInDB(user_id);
+    const userInDB = await getUserByIdOrThrowError(user_id);
     // const userInDB = await User.findById(userId)
     console.log(`REQ.BODY = `);
     console.log(req.body);
-    const validatedNewAnimal = checkAnimal({ ...req.body, userId });
+    const validatedNewAnimal = checkAnimal({ ...req.body, user_id });
     const newAnimalCreated = await Animal.create(validatedNewAnimal);
     userInDB?.animals.push(newAnimalCreated);
     userInDB.animalsPop.push(newAnimalCreated._id);
     await userInDB.save();
-    console.log(`nuevo animal creado y pusheado al usuario con id ${userId}`);
+    console.log(`nuevo animal creado y pusheado al usuario con id ${user_id}`);
     return res
       .status(200)
       .send({ msg: "Animal creado correctamente.", animal: newAnimalCreated });
@@ -79,8 +79,8 @@ router.post("/", jwtCheck, async (req: any, res) => {
 router.delete("/delete/:id_senasa", jwtCheck, async (req: any, res) => {
   try {
     const reqAuth: IReqAuth = req.auth;
-    const userId = reqAuth.sub;
-    const id_senasaFromParams = req.params.id_senasa;
+    const userId: string = reqAuth.sub;
+    const id_senasaFromParams: string = req.params.id_senasa;
     console.log(`En delete por id...: `, id_senasaFromParams);
 
     if (!id_senasaFromParams) {
