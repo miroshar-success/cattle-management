@@ -2,7 +2,7 @@
 
 Repository meant to be just a practice exercise through the creation of a CRUD full-stack app with OAuth2.0 incorporated.
 
-## How to run de front end:
+## How to run the front end:
 
 From the main directory, follow this commands:
 cd client/
@@ -11,7 +11,7 @@ npm install
 
 npm start
 
-## How to run de back-end:
+## How to run the back-end:
 
 Create a new database called "Cattle_Tracker_DB" with postgres or in the /api/src/config/config.js file set the appropiate configurations for your own Data Base.
 After having the Database prepared to be synced, in the directory /api run the following commands:
