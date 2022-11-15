@@ -19,6 +19,7 @@ export const userSchema: Schema = new Schema({
   email: { type: String, required: true, lowercase: true, unique: true },
   profile_img: { type: String, required: false },
   animals: [animalSchema],
+  animalsPop: [{ type: String, ref: "Animal" }],
   notes: [noteSchema],
 });
 

@@ -49,7 +49,7 @@ export const animalSchema: Schema = new Schema(
     birthday: { type: Date, required: false },
     is_pregnant: { type: Boolean, default: false, required: false },
     delivery_date: { type: Date, required: false },
-    UserId: { type: String, required: true },
+    UserId: { type: String, ref: "User", required: true }, //! ref "User"
     // UserId: { type: String, required: true, reference: "User" },
   },
   { timestamps: true }

@@ -20,7 +20,7 @@ export const noteSchema: Schema = new Schema(
     title: String,
     theme: String,
     comment: { type: String, required: true },
-    importance: String,
+    importance: { type: String, enum: EImportance, required: false },
   },
   { timestamps: true }
 );
