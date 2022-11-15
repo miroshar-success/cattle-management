@@ -1,4 +1,3 @@
-import db from "../../models";
 import { checkAnimal } from "../../validators/animal-validators";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
@@ -7,7 +6,6 @@ import {
   getUserByIdOrThrowError,
   throwErrorIfUserIsNotRegisteredInDB,
 } from "../user/user-r-auxiliary";
-import { Op } from "sequelize";
 import {
   getAndParseIsPregnantQuery,
   getObjOfAllAnimalsAndCount,
@@ -65,6 +63,7 @@ router.post("/", jwtCheck, async (req: any, res) => {
     const validatedNewAnimal = checkAnimal({ ...req.body, userId });
     const newAnimalCreated = await Animal.create(validatedNewAnimal);
     userInDB?.animals.push(newAnimalCreated);
+    userInDB.animalsPop.push(newAnimalCreated._id);
     await userInDB.save();
     console.log(`nuevo animal creado y pusheado al usuario con id ${userId}`);
     return res
