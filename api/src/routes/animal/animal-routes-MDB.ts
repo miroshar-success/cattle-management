@@ -184,9 +184,7 @@ router.get("/typesAllowed", async (req, res) => {
   }
 });
 
-//! ------- RUTAS SEQUELIZE : ---------
-
-// SEARCH BY QUERY :
+// SEARCH BY QUERY EN DESARROLLO EXPERIMENTAL:
 router.get("/search", jwtCheck, async (req: any, res) => {
   try {
     console.log(`Buscando por query...`);
@@ -199,23 +197,95 @@ router.get("/search", jwtCheck, async (req: any, res) => {
     if (typeof queryValue === "string") {
       queryValue.toLowerCase();
     }
-    const searchedResults: IAnimal[] = await db.Animal.findAll({
-      where: {
-        [Op.or]: [
-          { id_senasa: queryValue },
-          { name: queryValue },
-          { device_number: queryValue },
-        ],
-        UserId: userId,
-      },
-    });
-    console.log(`Largo de searchedResults = ${searchedResults?.length}`);
 
-    return res.status(200).send(searchedResults);
+    // buscar adentro de User con forEach :
+    const userInDB = await User.findById(userId);
+    if (userInDB === null) {
+      throw new Error("Usuario no encontrado");
+    }
+    console.log("usuario encontrado");
+
+    const userAnimals = userInDB.animals;
+    let animalesMatched: IAnimal[] = [];
+    userAnimals.forEach((element: IAnimal) => {
+      if (
+        element.id_senasa === queryValue ||
+        element.name === queryValue ||
+        element.device_number === queryValue
+      ) {
+        animalesMatched.push(element);
+      }
+    });
+
+    console.log("ANIMALS FOUND = ", animalesMatched);
+    console.log("animalesMatched.length =", animalesMatched.length);
+
+    // buscar en collection Animal :
+    const multiQuery = await Animal.find({
+      $and: [
+        { UserId: userId },
+        {
+          $or: [
+            { id_senasa: queryValue },
+            { name: queryValue },
+            { device_number: queryValue },
+          ],
+        },
+      ],
+    });
+
+    const multiQuery2 = await Animal.where({ UserId: userId }).where({
+      $or: [
+        { id_senasa: queryValue },
+        { name: queryValue },
+        { device_number: queryValue },
+      ],
+    });
+
+    // const fetchedAnimals = await Animal.where("name").equals(queryValue);
+
+    // console.log(fetchedAnimals);
+    console.log("MQ = ", multiQuery.length);
+    console.log("MQ2 = ", multiQuery2.length);
+
+    return res.status(200).send(multiQuery);
   } catch (error: any) {
     return res.status(400).send({ error: error.message });
   }
 });
+
+//! ------- RUTAS SEQUELIZE : ---------
+
+// SEARCH BY QUERY :
+// router.get("/search", jwtCheck, async (req: any, res) => {
+//   try {
+//     console.log(`Buscando por query...`);
+//     console.log(req.query);
+//     let queryValue = req.query.value;
+//     const reqAuth: IReqAuth = req.auth;
+//     const userId = reqAuth.sub;
+//     await throwErrorIfUserIsNotRegisteredInDB(userId);
+
+//     if (typeof queryValue === "string") {
+//       queryValue.toLowerCase();
+//     }
+//     const searchedResults: IAnimal[] = await db.Animal.findAll({
+//       where: {
+//         [Op.or]: [
+//           { id_senasa: queryValue },
+//           { name: queryValue },
+//           { device_number: queryValue },
+//         ],
+//         UserId: userId,
+//       },
+//     });
+//     console.log(`Largo de searchedResults = ${searchedResults?.length}`);
+
+//     return res.status(200).send(searchedResults);
+//   } catch (error: any) {
+//     return res.status(400).send({ error: error.message });
+//   }
+// });
 
 //! PARSED FOR STATS: ------------------
 // GET ALL IS PREGNANT TRUE || FALSE & ORDERED BY DELIVERY DATE :
