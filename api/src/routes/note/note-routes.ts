@@ -32,10 +32,10 @@ router.post("/newNote", jwtCheck, async (req: any, res) => {
 
       await notesOwner.save();
 
-      return res.status(200).send(checkedNoteObj);
+      return res.status(201).send(checkedNoteObj);
     } else {
       return res
-        .status(400)
+        .status(404)
         .send({ error: "No se encontró al usuario en la base de datos." });
     }
   } catch (error: any) {
@@ -104,15 +104,15 @@ router.put("/", jwtCheck, async (req: any, res) => {
     if (foundUser) {
       let noteToUpdate = foundUser?.notes.id(noteId);
       if (noteToUpdate) {
-        noteToUpdate.title = req.body.title;
-        noteToUpdate.comment = req.body.comment;
-        noteToUpdate.theme = req.body.theme;
-        noteToUpdate.importance = req.body.importance;
+        noteToUpdate.title = validatedNote.title;
+        noteToUpdate.comment = validatedNote.comment;
+        noteToUpdate.theme = validatedNote.theme;
+        noteToUpdate.importance = validatedNote.importance;
         console.log("noteToUpdate Updated = ", noteToUpdate);
         await foundUser.save();
       }
       console.log("USER AFTER SAVE = ", foundUser);
-      return res.status(200).send({ updated: 1, msg: "Notaaaa ddbb MOngoo" });
+      return res.status(201).send({ updated: 1, msg: "Nota actualizada." });
     } else {
       throw new Error("No se ha encontrado al usuario en la base de datos.");
     }
