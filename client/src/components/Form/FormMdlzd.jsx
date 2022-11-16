@@ -14,6 +14,7 @@ export function FormMdlzd({ closeModal, animal }) {
     id_senasa: animal?.id_senasa || "",
     type_of_animal: animal?.type_of_animal || "",
     breed_name: animal?.breed_name || "",
+    sex: animal?.sex || "",
     location: animal?.location || "",
     weight_kg: animal?.weight_kg || "",
     name: animal?.name || "",
@@ -39,6 +40,7 @@ export function FormMdlzd({ closeModal, animal }) {
     (state) => state.animals.typesOfAnimals
   );
   const accessToken = localStorage.getItem("tokenCattleTracker");
+  const sexsArray = ["hembra", "macho"];
 
   // HANDLE FUNCTIONS:
   function handleOnChange(e) {
@@ -246,7 +248,7 @@ export function FormMdlzd({ closeModal, animal }) {
                         checked
                         className="checked:bg-green"
                         onChange={handleOnChange}
-                      />{" "}
+                      />
                       {type}
                     </React.Fragment>
                   ) : (
@@ -267,6 +269,44 @@ export function FormMdlzd({ closeModal, animal }) {
               </fieldset>
             )}
           </div>
+          <legend className="text-gray font-semibold w-[120px] md:w-[130px] text-sm after:content-['*'] after:ml-0.5 after:text-red-500 ">
+            Sexo
+          </legend>
+          <div>
+            <fieldset className="flex  gap-3 my-2 ">
+              {sexsArray?.map((type) =>
+                localState.sex === type ? (
+                  <React.Fragment key={type}>
+                    <input
+                      type="radio"
+                      id={type}
+                      name="sex"
+                      required={true}
+                      value={type}
+                      checked
+                      className="checked:bg-green"
+                      onChange={handleOnChange}
+                    />
+                    {type}
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment key={type}>
+                    <input
+                      type="radio"
+                      id={type}
+                      name="sex"
+                      required={true}
+                      value={type}
+                      className="checked:bg-green"
+                      onChange={handleOnChange}
+                    />
+                    {type}
+                  </React.Fragment>
+                )
+              )}
+            </fieldset>
+          </div>
+
           <div className="flex items-center gap-3 mb-3 w-full">
             <label
               htmlFor="device_type"
