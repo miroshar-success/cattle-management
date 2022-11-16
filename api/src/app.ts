@@ -2,7 +2,6 @@ const morgan = require("morgan");
 import express from "express";
 import cors from "cors";
 
-import testRouter from "./routes/test";
 import userRouter from "./routes/user/user-routes";
 import animalRouter from "./routes/animal/animal-routes";
 import noteRouter from "./routes/note/note-routes";
@@ -16,7 +15,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // routes middlewares:
-app.use("/test", testRouter);
 app.use("/animal", animalRouter);
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
