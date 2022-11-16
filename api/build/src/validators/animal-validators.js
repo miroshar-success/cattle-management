@@ -16,6 +16,7 @@ function checkAnimal(bodyFromReq) {
             UserId: bodyFromReq.user_id,
             type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
             breed_name: checkBreedName(bodyFromReq.breed_name),
+            sex: checkSex(bodyFromReq.sex),
             location: checkLocation(bodyFromReq.location),
             weight_kg: checkWeight(bodyFromReq.weight_kg),
             name: checkName(bodyFromReq.name),
@@ -38,6 +39,15 @@ function checkAnimal(bodyFromReq) {
     }
 }
 exports.checkAnimal = checkAnimal;
+// CHECK SEX :
+function checkSex(sexFromReq) {
+    if (Object.values(Animal_1.ESex).includes(sexFromReq.toLowerCase())) {
+        return sexFromReq;
+    }
+    else {
+        throw new Error("El sexo ingresado no es válido.");
+    }
+}
 // CHECK IMAGES :
 function checkImages(imagesArrayFromReq) {
     let imagesChecked = [];
@@ -85,7 +95,7 @@ function checkId(idFromReq) {
 }
 // CHECK TYPE OF ANIMAL:
 function isValidTypeOfAnimal(argument) {
-    return Object.values(Animal_1.ITypeOfAnimal).includes(argument);
+    return Object.values(Animal_1.ETypeOfAnimal).includes(argument);
 }
 exports.isValidTypeOfAnimal = isValidTypeOfAnimal;
 function checkTypeOfAnimal(argFromReq) {
@@ -164,7 +174,7 @@ function checkBirthday(birthdayFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(birthdayFromReq)) {
         return undefined;
     }
-    if ((0, generic_validators_1.isStringXCharsLong)(10, birthdayFromReq)) {
+    if ((0, generic_validators_1.isStringBetween1AndXCharsLong)(30, birthdayFromReq)) {
         return birthdayFromReq;
     }
     throw new Error(`Error al validar el birthday.`);

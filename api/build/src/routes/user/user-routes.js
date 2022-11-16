@@ -11,16 +11,15 @@ const router = (0, express_1.Router)();
 // -------- MONGO / MONGOOSE : ------------
 const mongoDB_1 = require("../../mongoDB/");
 // GET ALL USERS :
-router.get("/", async (req, res) => {
-    try {
-        const users = await mongoDB_1.User.find();
-        return res.status(200).send(users);
-    }
-    catch (error) {
-        console.log(`Error en ruta GET "user/". ${error.message}`);
-        return res.status(400).send({ error: error.message });
-    }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const users: IUser[] = await User.find().lean();
+//     return res.status(200).send(users);
+//   } catch (error: any) {
+//     console.log(`Error en ruta GET "user/". ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// });
 // POST NEW USER
 router.post("/register", jwtMiddleware_1.default, async (req, res) => {
     try {

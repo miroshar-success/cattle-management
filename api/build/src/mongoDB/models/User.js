@@ -6,8 +6,14 @@ const Animal_1 = require("./Animal");
 const Note_1 = require("./Note");
 exports.userSchema = new mongoose_1.Schema({
     _id: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true, lowercase: true, unique: true },
+    name: { type: String, required: true, maxlength: 50 },
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        unique: true,
+        maxlength: 100,
+    },
     profile_img: { type: String, required: false },
     animals: [Animal_1.animalSchema],
     animalsPop: [{ type: String, ref: "Animal" }],
