@@ -61,6 +61,9 @@ export function NoteComponent() {
       {notesState?.allNotes && Array.isArray(notesState?.allNotes) && (
         <NoteCardContainer notesToRender={notesState?.allNotes} />
       )}
+      {notesState?.allNotes?.error && (
+        <div>Oops! Hubo un error... {notesState.allNotes.error}</div>
+      )}
     </div>
   );
 }
