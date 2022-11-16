@@ -37,9 +37,9 @@ export enum ESex {
 export const animalSchema: Schema = new Schema<IAnimal>(
   {
     _id: { type: String, required: true },
-    id_senasa: { type: String, required: true, inmutable: true },
+    id_senasa: { type: String, required: true, inmutable: true, maxlength: 40 },
     type_of_animal: { type: String, enum: ETypeOfAnimal, required: true },
-    breed_name: { type: String, required: false },
+    breed_name: { type: String, required: false, maxlength: 60 },
     sex: { type: String, enum: ESex },
     location: String,
     weight_kg: { type: Number, min: 0, max: 3000 },
@@ -50,9 +50,9 @@ export const animalSchema: Schema = new Schema<IAnimal>(
       required: false,
       default: "sin nombre",
     },
-    device_type: { type: String, required: true },
+    device_type: { type: String, required: true, maxlength: 30 },
     device_number: { type: String, required: true },
-    comments: { type: String, required: false, maxLength: 700 },
+    comments: { type: String, required: false, maxlength: 800 },
     images: [String],
     birthday: { type: Date, required: false },
     is_pregnant: { type: Boolean, default: false, required: false },
