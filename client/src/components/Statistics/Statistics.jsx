@@ -169,13 +169,13 @@ export function Statistics() {
                 )}
               </div>
               <br />
-              {/* <div className="lg:flex flex-col justify-center items-center">
+              <div className="lg:flex flex-col justify-center items-center">
                 <h2 className="text-green text-2xl my-5">Sexo</h2>
                 <div className="graph400">
                   {statsState?.sex && (
                     <PieChartTwoObj
-                      statsObjOne={statsState?.sex?.male}
-                      statsObjTwo={statsState?.sex?.female}
+                      statsObjOne={statsState?.sex?.macho}
+                      statsObjTwo={statsState?.sex?.hembra}
                       by="sexo"
                       title="Sexo del animal"
                       labels={["Macho", "Hembra"]}
@@ -185,13 +185,13 @@ export function Statistics() {
                 <div className="flex items-center gap-5 justify-center w-full my-5">
                   <FilterCustomBtn
                     tag="Machos"
-                    value={"male"}
+                    value={"macho"}
                     name="sex"
                     onClick={handleFilterChange}
                   />
                   <FilterCustomBtn
                     tag="Hembras"
-                    value="female"
+                    value="hembra"
                     name="sex"
                     onClick={handleFilterChange}
                   />
@@ -202,7 +202,7 @@ export function Statistics() {
                     onClick={handleFilterChange}
                   />
                 </div>
-              </div> */}
+              </div>
               <div>
                 {filters?.sex && statsState?.sex && (
                   <CardFilterContainer
@@ -253,7 +253,7 @@ export function Statistics() {
                 )}
               </div>
               <br />
-              <div className="lg:flex flex-col justify-center items-center">
+              {/* <div className="lg:flex flex-col justify-center items-center">
                 <h2 className="text-green text-2xl my-5">
                   Estado de embarazo de hembras
                 </h2>
@@ -285,7 +285,7 @@ export function Statistics() {
                     onClick={handleFilterChange}
                   />
                 </div>
-              </div>
+              </div> */}
               <div>
                 {filters?.pregnant && statsState?.sex?.[filters.pregnant] && (
                   <CardFilterContainer
