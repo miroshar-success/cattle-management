@@ -191,7 +191,7 @@ function checkBirthday(birthdayFromReq: any): string | undefined {
   if (isFalsyArgument(birthdayFromReq)) {
     return undefined;
   }
-  if (isStringXCharsLong(10, birthdayFromReq)) {
+  if (isStringBetween1AndXCharsLong(30, birthdayFromReq)) {
     return birthdayFromReq;
   }
 
