@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { AnimalCard } from "../AnimalCard/AnimalCard";
 import { Pagination } from "../Pagination/Pagination";
+import { parseDateWithNoHours } from "../../constants/parseDateFn";
 export function PropsPregnantStatistics({ animals }) {
   const [page, setPage] = useState(1);
   const showPerPage = 5;
@@ -85,7 +86,7 @@ export function PropsPregnantStatistics({ animals }) {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap capitalize">
-                      {animal?.delivery_date}
+                      {parseDateWithNoHours(animal?.delivery_date)}
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

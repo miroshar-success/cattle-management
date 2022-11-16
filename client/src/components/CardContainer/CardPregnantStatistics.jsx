@@ -12,10 +12,7 @@ export function CardPregnantStatistics({ animalsToRender }) {
     console.log(`en el useEffect de CardPregnantStatistics`);
 
     async function getPregnantAnimals(token) {
-      const response = await axios.get(
-        URL + "animal/isPregnant?status=true&order=ASC",
-        header(token)
-      );
+      const response = await axios.get(URL + "animal/pregnant", header(token));
       console.log(response.data);
       setPregnant(response.data);
     }
@@ -27,12 +24,12 @@ export function CardPregnantStatistics({ animalsToRender }) {
       <div className="text-green text-xl border-solid  border-b-2 border-green my-3 mx-3">
         Lista de hembras preñadas
       </div>
-      {pregnant?.list?.length === 0 ? (
+      {pregnant?.rows?.length === 0 ? (
         <div>No hay ningún animal para mostrar </div>
       ) : null}
-      {Array.isArray(pregnant?.list) ? (
-        <div className="list-animals-grid">
-          <PropsPregnantStatistics animals={pregnant.list} />{" "}
+      {Array.isArray(pregnant?.rows) ? (
+        <div className="rows-animals-grid">
+          <PropsPregnantStatistics animals={pregnant.rows} />{" "}
         </div>
       ) : null}
       {pregnant.error ? (

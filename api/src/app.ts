@@ -2,12 +2,10 @@ const morgan = require("morgan");
 import express from "express";
 import cors from "cors";
 
-import testRouter from "./routes/test";
-import animalRouter from "./routes/animal/animal-routes";
 import userRouter from "./routes/user/user-routes";
+import animalRouter from "./routes/animal/animal-routes";
 import noteRouter from "./routes/note/note-routes";
 import jwtCheck from "./config/jwtMiddleware";
-import animalRouterMDB from "./routes/animal/animal-routes-MDB";
 
 const app = express();
 
@@ -16,23 +14,21 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(jwtCheck);
 // routes middlewares:
-app.use("/test", testRouter);
-app.use("/animal", animalRouterMDB);
+app.use("/animal", animalRouter);
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
 
 // for testing:
-app.get("/", (req, res) => {
-  return res.send("Yep! I'm listening to your requests...");
+app.get("/ping", (req, res) => {
+  return res.send("PONG!");
 });
 
 app.get("/auth", jwtCheck, (req: any, res) => {
   try {
     console.log(`En /auth`);
     console.log(req.auth);
-    return res.send(`En /AUTH! Tu id de usuario es ${req.auth.sub}`);
+    return res.send(`Tu id de usuario es ${req.auth.sub}`);
   } catch (error: any) {
     return res.status(400).send({ error: error.message });
   }

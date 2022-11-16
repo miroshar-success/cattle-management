@@ -16,9 +16,9 @@ export enum EImportance {
 
 export const noteSchema: Schema = new Schema<INote>(
   {
-    title: String,
-    theme: String,
-    comment: { type: String, required: true },
+    title: { type: String, required: false, maxlength: 40 },
+    theme: { type: String, required: false, maxlength: 40 },
+    comment: { type: String, required: true, maxlength: 250 },
     importance: { type: String, required: false },
   },
   { timestamps: true }
