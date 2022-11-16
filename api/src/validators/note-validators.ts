@@ -1,4 +1,4 @@
-import { EImportance, INote, INoteMDB } from "../types/note-types";
+import { EImportance, INote } from "../mongoDB/models/Note";
 import {
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
@@ -7,7 +7,7 @@ import {
 export function validateNewNoteMDB(bodyFromReq: any): INote {
   console.log("Validando nota con contenido del req.body");
 
-  let newNoteObj: INoteMDB = {
+  let newNoteObj: INote = {
     // _id: bodyFromReq._id,
     title: checkTitle(bodyFromReq.title),
     theme: checkTheme(bodyFromReq.theme),
@@ -53,8 +53,14 @@ function checkImportance(importanceFromReq: any): EImportance | undefined {
   if (isFalsyArgument(importanceFromReq)) {
     return undefined;
   }
-  if (Object.values(EImportance).includes(importanceFromReq)) {
-    return importanceFromReq;
+  console.log("importanceFromReq = ", importanceFromReq);
+  let argToLowerCase = importanceFromReq.toLowerCase();
+  if (Object.values(EImportance).includes(argToLowerCase)) {
+    console.log(`Es verdadero...`);
+
+    return argToLowerCase;
   }
+  console.log(`es falso...`);
+
   throw new Error(`Error en aux fn checkImportance.`);
 }
