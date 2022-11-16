@@ -19,7 +19,7 @@ export const noteSchema: Schema = new Schema<INote>(
     title: String,
     theme: String,
     comment: { type: String, required: true },
-    importance: { type: String, enum: EImportance, required: false },
+    importance: { type: String, required: false },
   },
   { timestamps: true }
 );
