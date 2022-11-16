@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateNewNoteMDB = void 0;
-const note_types_1 = require("../types/note-types");
+const Note_1 = require("../mongoDB/models/Note");
 const generic_validators_1 = require("./generic-validators");
 function validateNewNoteMDB(bodyFromReq) {
     console.log("Validando nota con contenido del req.body");
@@ -46,8 +46,12 @@ function checkImportance(importanceFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(importanceFromReq)) {
         return undefined;
     }
-    if (Object.values(note_types_1.EImportance).includes(importanceFromReq)) {
-        return importanceFromReq;
+    console.log("importanceFromReq = ", importanceFromReq);
+    let argToLowerCase = importanceFromReq.toLowerCase();
+    if (Object.values(Note_1.EImportance).includes(argToLowerCase)) {
+        console.log(`Es verdadero...`);
+        return argToLowerCase;
     }
+    console.log(`es falso...`);
     throw new Error(`Error en aux fn checkImportance.`);
 }
