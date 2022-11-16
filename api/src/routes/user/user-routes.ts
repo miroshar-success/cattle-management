@@ -11,15 +11,15 @@ import { User } from "../../mongoDB/";
 import { INewUser, IUser } from "../../mongoDB/models/User";
 
 // GET ALL USERS :
-router.get("/", async (req, res) => {
-  try {
-    const users: IUser[] = await User.find();
-    return res.status(200).send(users);
-  } catch (error: any) {
-    console.log(`Error en ruta GET "user/". ${error.message}`);
-    return res.status(400).send({ error: error.message });
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const users: IUser[] = await User.find().lean();
+//     return res.status(200).send(users);
+//   } catch (error: any) {
+//     console.log(`Error en ruta GET "user/". ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// });
 
 // POST NEW USER
 router.post("/register", jwtCheck, async (req: any, res) => {

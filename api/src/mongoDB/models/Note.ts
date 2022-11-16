@@ -9,9 +9,9 @@ export interface INote {
 }
 
 export enum EImportance {
-  Alta = "Alta",
-  Media = "Media",
-  Baja = "Baja",
+  alta = "alta",
+  media = "media",
+  baja = "baja",
 }
 
 export const noteSchema: Schema = new Schema<INote>(
@@ -19,7 +19,10 @@ export const noteSchema: Schema = new Schema<INote>(
     title: { type: String, required: false, maxlength: 40 },
     theme: { type: String, required: false, maxlength: 40 },
     comment: { type: String, required: true, maxlength: 250 },
-    importance: { type: String, required: false },
+    importance: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
