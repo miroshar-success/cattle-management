@@ -169,13 +169,13 @@ export function Statistics() {
                 )}
               </div>
               <br />
-              <div className="lg:flex flex-col justify-center items-center">
+              {/* <div className="lg:flex flex-col justify-center items-center">
                 <h2 className="text-green text-2xl my-5">Sexo</h2>
                 <div className="graph400">
                   {statsState?.sex && (
                     <PieChartTwoObj
-                      statsObjOne={statsState.sex.male}
-                      statsObjTwo={statsState.sex.female}
+                      statsObjOne={statsState?.sex?.male}
+                      statsObjTwo={statsState?.sex?.female}
                       by="sexo"
                       title="Sexo del animal"
                       labels={["Macho", "Hembra"]}
@@ -202,7 +202,7 @@ export function Statistics() {
                     onClick={handleFilterChange}
                   />
                 </div>
-              </div>
+              </div> */}
               <div>
                 {filters?.sex && statsState?.sex && (
                   <CardFilterContainer
