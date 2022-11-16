@@ -59,7 +59,10 @@ export async function getObjOfAnimalsByPropAndCount(
 }
 
 // GET OBJ OF ALL ANIMALS AND COUNT :
-function getObjOfAllAnimalsAndCountMDB(userInDBAnimals: IAnimal[]) {
+function getObjOfAllAnimalsAndCount(userInDBAnimals: IAnimal[]): {
+  count: number;
+  rows: IAnimal[];
+} {
   const allAnimalsAndCount = {
     count: userInDBAnimals.length,
     rows: userInDBAnimals,
@@ -114,7 +117,7 @@ export async function getStatsObjEvo(user_id: string) {
   const pregnantAndNotPregnantObjs = getNotAndPregnantAnimals(userInDB.animals);
 
   const statsObjectComplete = {
-    allFoundAndCount: getObjOfAllAnimalsAndCountMDB(userInDB.animals),
+    allFoundAndCount: getObjOfAllAnimalsAndCount(userInDB.animals),
     deviceType: await getObjOfAnimalsByPropAndCount(
       user_id,
       userInDB.animals,
@@ -141,3 +144,33 @@ export async function getStatsObjEvo(user_id: string) {
   };
   return statsObjectComplete;
 }
+
+// Ejemplo aproximado del objeto stats que se retorna en la ruta "/stats"
+// const stats = {
+//   numberOfTotalAnimals: 211,
+//   pregnant: { count: 11, rows: [{}, {}] },
+//   notPregnant: { count: 76, rows: [{}, {}, {}] },
+//   races: {
+//     ["Angus"]: { count: 3, rows: [{}, {}, {}, {}] },
+//     ["Criolla"]: { count: 2, rows: [{}, {}] },
+//     ["Sin especificar"]: { count: 2, rows: [{}, {}] },
+//   },
+//   types: {
+//     ["Vaquillona"]: {
+//       count: 53,
+//       rows: [{}, {}, {}, {}, {}],
+//       pregnants: 11,
+//     },
+//     ["Toro"]: { count: 8, rows: [{}, {}] },
+//     ["Novillo"]: { count: 13, rows: [{}, {}, {}] },
+//   },
+//   location: {
+//     ["Sector 2"]: { count: 7, rows: [{}, {}, {}] },
+//     ["Lote-4"]: { count: 2, rows: [{}, {}] },
+//     ["Sin especificar"]: { count: 4, rows: [{}, {}] },
+//   },
+//   deviceType: {
+//     ["Ear Tag"]: { count: 34, rows: [{}, {}, {}, {}] },
+//     ["Collar"]: { count: 9, rows: [{}, {}] },
+//   },
+// };
