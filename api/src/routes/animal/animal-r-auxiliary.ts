@@ -1,11 +1,15 @@
 import sequelize, { Op } from "sequelize";
 import db from "../../models";
-import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
+import { User } from "../../mongoDB";
+import { IAnimal, ETypeOfAnimal } from "../../mongoDB/models/Animal";
+
+//NOTA: La función auxiliar getStats está en un archivo aparte: ./getStatsAuxFn.ts
+// Lo dejé en un archivo aparte ya que es bastante grande y adentro de este archivo se hace muy voluminoso todo.
 
 // TYPES OF ANIMALS TO ARRAY :
 export function typesOfAnimalsToArray(): string[] {
   try {
-    let typesParsedToArray: string[] = Object.values(ITypeOfAnimal);
+    let typesParsedToArray: string[] = Object.values(ETypeOfAnimal);
     return typesParsedToArray;
   } catch (error: any) {
     console.log(`Error en fn typesOfAnimalsToArray. ${error.message}`);
@@ -264,8 +268,8 @@ export async function getObjOfAnimalsBySex(userId: string) {
         db.Animal.findAndCountAll({
           where: {
             [Op.or]: [
-              { type_of_animal: ITypeOfAnimal.Vaca },
-              { type_of_animal: ITypeOfAnimal.Vaquillona },
+              { type_of_animal: ETypeOfAnimal.Vaca },
+              { type_of_animal: ETypeOfAnimal.Vaquillona },
             ],
             is_pregnant: false,
             UserId: userId,
@@ -274,8 +278,8 @@ export async function getObjOfAnimalsBySex(userId: string) {
         db.Animal.findAndCountAll({
           where: {
             [Op.or]: [
-              { type_of_animal: ITypeOfAnimal.Toro },
-              { type_of_animal: ITypeOfAnimal.Novillo },
+              { type_of_animal: ETypeOfAnimal.Toro },
+              { type_of_animal: ETypeOfAnimal.Novillo },
             ],
             UserId: userId,
           },
@@ -283,8 +287,8 @@ export async function getObjOfAnimalsBySex(userId: string) {
         db.Animal.findAndCountAll({
           where: {
             [Op.or]: [
-              { type_of_animal: ITypeOfAnimal.Vaca },
-              { type_of_animal: ITypeOfAnimal.Vaquillona },
+              { type_of_animal: ETypeOfAnimal.Vaca },
+              { type_of_animal: ETypeOfAnimal.Vaquillona },
             ],
             UserId: userId,
           },
@@ -309,7 +313,7 @@ export async function getObjOfAnimalsBySex(userId: string) {
 export async function getObjOfAnimalsByTypeOfAnimal(userId: string) {
   try {
     let objOfAnimalsByType: any = {};
-    let arrayDeTiposDeAnimales = Object.values(ITypeOfAnimal);
+    let arrayDeTiposDeAnimales = Object.values(ETypeOfAnimal);
     console.log(arrayDeTiposDeAnimales);
 
     for (let i = 0; i < arrayDeTiposDeAnimales.length; i++) {
@@ -324,8 +328,8 @@ export async function getObjOfAnimalsByTypeOfAnimal(userId: string) {
         }),
       };
       if (
-        element == ITypeOfAnimal.Vaquillona ||
-        element === ITypeOfAnimal.Vaca
+        element == ETypeOfAnimal.Vaquillona ||
+        element === ETypeOfAnimal.Vaca
       ) {
         let femaleAnimalsPregnant = await db.Animal.findAndCountAll({
           where: {
@@ -348,6 +352,7 @@ export async function getObjOfAnimalsByTypeOfAnimal(userId: string) {
 }
 
 //! ------------------------------
+// Ejemplo aproximado del objeto stats que se retorna en la ruta "/stats"
 const stats = {
   numberOfTotalAnimals: 211,
   pregnant: { count: 11, rows: [{}, {}] },

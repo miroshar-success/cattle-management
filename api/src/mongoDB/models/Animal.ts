@@ -3,8 +3,9 @@ import { Schema } from "mongoose";
 export interface IAnimal {
   _id: string;
   id_senasa: string;
-  type_of_animal: ITypeOfAnimal;
+  type_of_animal: ETypeOfAnimal;
   breed_name?: string;
+  sex: ESex;
   location?: string;
   weight_kg?: number;
   name?: string;
@@ -21,19 +22,25 @@ export interface IAnimal {
   UserId: string;
 }
 
-export enum ITypeOfAnimal {
+export enum ETypeOfAnimal {
   Novillo = "Novillo",
   Toro = "Toro",
   Vaquillona = "Vaquillona",
   Vaca = "Vaca",
 }
 
+export enum ESex {
+  macho = "macho",
+  hembra = "hembra",
+}
+
 export const animalSchema: Schema = new Schema<IAnimal>(
   {
     _id: { type: String, required: true },
     id_senasa: { type: String, required: true, inmutable: true },
-    type_of_animal: { type: String, enum: ITypeOfAnimal, required: true },
+    type_of_animal: { type: String, enum: ETypeOfAnimal, required: true },
     breed_name: { type: String, required: false },
+    sex: { type: String, enum: ESex },
     location: String,
     weight_kg: { type: Number, min: 0, max: 3000 },
     name: {

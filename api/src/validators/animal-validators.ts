@@ -1,4 +1,4 @@
-import { IAnimal, ITypeOfAnimal } from "../mongoDB/models/Animal";
+import { ESex, ETypeOfAnimal, IAnimal } from "../mongoDB/models/Animal";
 import {
   isFalsyArgument,
   isStringBetween1And50CharsLong,
@@ -21,6 +21,7 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
       UserId: bodyFromReq.user_id,
       type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
       breed_name: checkBreedName(bodyFromReq.breed_name),
+      sex: checkSex(bodyFromReq.sex),
       location: checkLocation(bodyFromReq.location),
       weight_kg: checkWeight(bodyFromReq.weight_kg),
       name: checkName(bodyFromReq.name),
@@ -39,6 +40,15 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
   } catch (error: any) {
     console.log(`Error en fn checkNewAnimal. ${error.message}`);
     throw new Error(error.message);
+  }
+}
+
+// CHECK SEX :
+function checkSex(sexFromReq: any): ESex {
+  if (Object.values(ESex).includes(sexFromReq.toLowerCase())) {
+    return sexFromReq;
+  } else {
+    throw new Error("El sexo ingresado no es válido.");
   }
 }
 
@@ -90,10 +100,10 @@ function checkId(idFromReq: any): string {
 
 // CHECK TYPE OF ANIMAL:
 export function isValidTypeOfAnimal(argument: any): boolean {
-  return Object.values(ITypeOfAnimal).includes(argument);
+  return Object.values(ETypeOfAnimal).includes(argument);
 }
 
-function checkTypeOfAnimal(argFromReq: any): ITypeOfAnimal {
+function checkTypeOfAnimal(argFromReq: any): ETypeOfAnimal {
   if (isValidTypeOfAnimal(argFromReq)) {
     return argFromReq;
   } else {

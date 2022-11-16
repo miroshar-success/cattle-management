@@ -1,3 +1,4 @@
 node_modules
 .env
 configENV.js
+notas sobre mongoose.txt

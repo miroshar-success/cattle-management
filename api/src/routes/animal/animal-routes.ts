@@ -1,6 +1,6 @@
 import db from "../../models";
 import { checkAnimal } from "../../validators/animal-validators";
-import { IAnimal, ITypeOfAnimal } from "../../mongoDB/models/Animal";
+import { IAnimal, ETypeOfAnimal } from "../../mongoDB/models/Animal";
 import jwtCheck from "../../config/jwtMiddleware";
 import { Router } from "express";
 import { IReqAuth } from "../../types/user-types";
@@ -399,7 +399,7 @@ router.get("/ts1", async (req, res) => {
 
 // router.get("/testing4", async (req, res) => {
 //   try {
-//     let arrayDeTiposDeAnimales = Object.values(ITypeOfAnimal);
+//     let arrayDeTiposDeAnimales = Object.values(ETypeOfAnimal);
 //     console.log(arrayDeTiposDeAnimales);
 //     let booleano = true;
 //     let objParsed: any = {};

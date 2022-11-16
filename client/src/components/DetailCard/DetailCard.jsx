@@ -98,6 +98,7 @@ export default function DetailCard({ animal }) {
       <div className="text-gray">
         <DetailDiv text="Nombre" value={animal?.name} />
         <DetailDiv text="ID Senasa " value={animal?.id_senasa} />
+        <DetailDiv text="Sexo" value={animal?.sex} />
         <DetailDiv text="Raza" value={animal?.breed_name} />
         <DetailDiv text="Tipo de animal" value={animal?.type_of_animal} />
         <DetailDiv text="Peso" value={animal?.weight_kg + "kg"} />
