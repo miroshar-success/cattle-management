@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavBar } from "../NavBar/NavBar";
-import { CardPregnantStatistics } from "../CardContainer/CardPregnantStatistics";
-import { FilterButtons } from "../FilterButtons.jsx/FilterButtons";
+import { NavBar } from "../../components/NavBar/NavBar";
+import { CardPregnantStatistics } from "../../components/CardContainer/CardPregnantStatistics";
+import { FilterButtons } from "../../components/FilterButtons.jsx/FilterButtons";
 import { getStats, setStatsToLoading } from "../../redux/features/animals";
 import { DoughnutChart } from "../../charts/DoughnutChart";
-import "./statistics.css";
+import "./dashboard.css";
 import { PieChart } from "../../charts/PieChart";
 import { VerticalBarChartPreg } from "../../charts/VerticalBarChartPreg";
 import { VerticalBarChart } from "../../charts/VerticalBarChart";
-import { CardFilterContainer } from "../CardContainer/CardFilterContainer";
+import { CardFilterContainer } from "../../components/CardContainer/CardFilterContainer";
 import { PieChartTwoObj } from "../../charts/PieChartTwoObj";
-import { FilterCustomBtn } from "../FilterButtons.jsx/FilterCustomBtn";
+import { FilterCustomBtn } from "../../components/FilterButtons.jsx/FilterCustomBtn";
 import loadingGif from "../../assets/loading.gif";
 
-export function Statistics() {
+export function Dashboard() {
   const token = localStorage.getItem("tokenCattleTracker");
   const dispatch = useDispatch();
   const statsState = useSelector((state) => state.animals.stats);
