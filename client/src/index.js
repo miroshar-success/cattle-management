@@ -11,15 +11,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Auth0Provider
-      // domain="dev-4hixku625rb7v8m8.us.auth0.com"
       domain={process.env.REACT_APP_DOMAIN}
-      // clientId="8PW18rqeRhlkuTLpxgtEcLPwEKeO0qwG"
       clientId={process.env.REACT_APP_CLIENT_ID}
       redirectUri={window.location.origin}
-      // redirectUri="http://localhost:3000/home"
       useRefreshTokens={true}
       cacheLocation="localstorage"
-      // audience="https://cattle-tracker-api.com"
       audience={REACT_APP_JWT_AUDIENCE}
       // scope="read:current_user update:current_user_metadata"
     >
