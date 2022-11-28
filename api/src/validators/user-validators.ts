@@ -1,5 +1,5 @@
 import { INewUser } from "../mongoDB/models/User";
-import { IUser, IUserMDB } from "../types/user-types";
+
 import {
   isEmail,
   isFalsyArgument,
