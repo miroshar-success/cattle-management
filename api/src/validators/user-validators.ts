@@ -6,6 +6,7 @@ import {
   isStringBetween1And101CharsLong,
   isStringBetween1And50CharsLong,
   isValidURLImage,
+  stringContainsURLs,
 } from "./generic-validators";
 
 export function validateNewUser(
@@ -21,9 +22,9 @@ export function validateNewUser(
       name: checkUserName(nameFromReq),
       email: checkEmail(emailFromReq),
       profile_img: checkProfileImg(profile_img),
-      animals: [],
-      animalsPop: [],
-      notes: [],
+      // animals: [],
+      // animalsPop: [],
+      // notes: [],
     };
     return validatedNewUser;
   } catch (error) {
@@ -41,9 +42,9 @@ function checkUserId(idFromReq: any): string {
 }
 
 // CHECK USER NAME :
-function checkUserName(nameFromReq: any): string | undefined {
+function checkUserName(nameFromReq: any): string {
   if (isFalsyArgument(nameFromReq)) {
-    return undefined;
+    throw new Error(`Nombre de usuario '${nameFromReq}' inválido.`);
   }
   if (isStringBetween1And50CharsLong(nameFromReq)) {
     return nameFromReq;
@@ -65,7 +66,10 @@ export function checkProfileImg(profileImgFromReq: any): string | undefined {
   if (isFalsyArgument(profileImgFromReq)) {
     return undefined;
   }
-  if (isValidURLImage(profileImgFromReq)) {
+  if (
+    isValidURLImage(profileImgFromReq) ||
+    stringContainsURLs(profileImgFromReq)
+  ) {
     return profileImgFromReq;
   }
   throw new Error(`Error al validar profile image.`);

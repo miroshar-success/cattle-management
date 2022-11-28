@@ -10,9 +10,9 @@ function validateNewUser(idFromReq, nameFromReq, emailFromReq, profile_img) {
             name: checkUserName(nameFromReq),
             email: checkEmail(emailFromReq),
             profile_img: checkProfileImg(profile_img),
-            animals: [],
-            animalsPop: [],
-            notes: [],
+            // animals: [],
+            // animalsPop: [],
+            // notes: [],
         };
         return validatedNewUser;
     }
@@ -33,7 +33,7 @@ function checkUserId(idFromReq) {
 // CHECK USER NAME :
 function checkUserName(nameFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(nameFromReq)) {
-        return undefined;
+        throw new Error(`Nombre de usuario '${nameFromReq}' inválido.`);
     }
     if ((0, generic_validators_1.isStringBetween1And50CharsLong)(nameFromReq)) {
         return nameFromReq;
@@ -55,7 +55,8 @@ function checkProfileImg(profileImgFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(profileImgFromReq)) {
         return undefined;
     }
-    if ((0, generic_validators_1.isValidURLImage)(profileImgFromReq)) {
+    if ((0, generic_validators_1.isValidURLImage)(profileImgFromReq) ||
+        (0, generic_validators_1.stringContainsURLs)(profileImgFromReq)) {
         return profileImgFromReq;
     }
     throw new Error(`Error al validar profile image.`);

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.checkAndParseDate = exports.stringToBoolean = exports.stringContainsURLs = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+const luxon_1 = require("luxon");
 // IS STRING:
 function isString(argumento) {
     if (typeof argumento !== "string") {
@@ -133,6 +134,16 @@ function isValidURLImage(argumento) {
         null);
 }
 exports.isValidURLImage = isValidURLImage;
+// STRING CONTAINS URLS :
+function stringContainsURLs(argumento) {
+    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(argumento)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.stringContainsURLs = stringContainsURLs;
 // PARSE STRING TO BOOLEAN :
 function stringToBoolean(argumento) {
     if (argumento === "true") {
@@ -144,3 +155,14 @@ function stringToBoolean(argumento) {
     throw new Error(`El argumento '${argumento}' es inválido.`);
 }
 exports.stringToBoolean = stringToBoolean;
+function checkAndParseDate(dateFromReq) {
+    try {
+        let parsedAndValidated = luxon_1.DateTime.fromISO(dateFromReq);
+        return parsedAndValidated.toJSDate();
+    }
+    catch (error) {
+        console.log(`Error en checkAndParseDate. ${error.message}`);
+        throw new Error(error.message);
+    }
+}
+exports.checkAndParseDate = checkAndParseDate;

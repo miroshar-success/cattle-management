@@ -1,6 +1,5 @@
-import { Response, Request } from "express";
+import { Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-
 import { checkAnimal } from "../../validators/animal-validators";
 import { getUserByIdOrThrowError } from "../user/user-r-auxiliary";
 import {
@@ -41,7 +40,7 @@ export async function handleGetAllAnimalsFromUserRequest(
       throw new Error("User id no puede ser falso.");
     }
     const userInDB = await getUserByIdOrThrowError(user_id);
-    let animalsFromUser: IAnimal[] = userInDB.animals;
+    let animalsFromUser = userInDB.animals;
     return res.status(200).send(animalsFromUser);
   } catch (error: any) {
     console.log(`Error en "/animal/". ${error.message}`);
@@ -65,8 +64,8 @@ export async function handlePostNewAnimalRequest(
     console.log(req.body);
     const validatedNewAnimal = checkAnimal({ ...req.body, user_id });
     const newAnimalCreated = await Animal.create(validatedNewAnimal);
-    userInDB?.animals.push(newAnimalCreated);
-    userInDB.animalsPop.push(newAnimalCreated._id);
+    userInDB.animals.push(newAnimalCreated);
+    // userInDB.animalsPop.push(newAnimalCreated._id);
     await userInDB.save();
     console.log(`nuevo animal creado y pusheado al usuario con id ${user_id}`);
     return res.status(200).send({
@@ -81,6 +80,10 @@ export async function handlePostNewAnimalRequest(
 
 // DELETE ANIMAL :
 export async function handleDeleteAnimalById(req: JWTRequest, res: Response) {
+  let response = {
+    userAnimal: 0,
+    animalCollection: 0,
+  };
   try {
     const user_id = req.auth?.sub;
     const id_senasaFromParams: string = req.params.id_senasa;
@@ -91,22 +94,32 @@ export async function handleDeleteAnimalById(req: JWTRequest, res: Response) {
     if (!user_id) {
       throw new Error("El user id es falso.");
     }
+
     let userInDB = await getUserByIdOrThrowError(user_id);
     if (userInDB === null) {
       throw new Error(
         `Usuario con id '${user_id}'no encontrado en la base de datos.`
       );
     }
+    const userAnimal = userInDB.animals.id(id_senasaFromParams);
+    const animalFromCollection = await Animal.findOneAndDelete({
+      _id: id_senasaFromParams,
+      UserId: user_id,
+    }).exec();
 
-    await userInDB.animals.id(id_senasaFromParams)?.remove();
-    await userInDB.save();
+    if (animalFromCollection !== null) {
+      response.animalCollection++;
+    }
+    if (userAnimal !== null) {
+      userAnimal.remove();
+      await userInDB.save();
+      response.userAnimal++;
+    }
 
-    return res
-      .status(200)
-      .send({ msg: "Animal eliminado exitosamente", status: true });
+    return res.status(200).send(response);
   } catch (error: any) {
     console.log(`Error en DELETE por id. ${error.message}`);
-    return res.status(400).send({ error: error.message });
+    return res.status(400).send({ error: error.message, response: response });
   }
 }
 
@@ -143,6 +156,10 @@ export async function handleUpdateAnimalRequest(
   req: JWTRequest,
   res: Response
 ) {
+  let response = {
+    userAnimals: 0,
+    animalCollection: 0,
+  };
   try {
     console.log(`REQ.BODY = `);
     console.log(req.body);
@@ -151,34 +168,50 @@ export async function handleUpdateAnimalRequest(
     if (!userId) {
       throw new Error("El user id es falso");
     }
+
     const userInDB = await getUserByIdOrThrowError(userId);
     const validatedAnimal: IAnimal = checkAnimal({ ...req.body, userId });
+
     let foundAnimal = userInDB.animals.id(validatedAnimal._id);
-    foundAnimal.type_of_animal = validatedAnimal.type_of_animal;
-    foundAnimal.breed_name = validatedAnimal.breed_name;
-    foundAnimal.location = validatedAnimal.location;
-    foundAnimal.weight_kg = validatedAnimal.weight_kg;
-    foundAnimal.name = validatedAnimal.name;
-    foundAnimal.device_type = validatedAnimal.device_type;
-    foundAnimal.device_number = validatedAnimal.device_number;
-    foundAnimal.images = validatedAnimal.images;
-    foundAnimal.comments = validatedAnimal.comments;
-    foundAnimal.birthday = validatedAnimal.birthday;
-    foundAnimal.is_pregnant = validatedAnimal.is_pregnant;
-    foundAnimal.delivery_date = validatedAnimal.delivery_date;
-    foundAnimal.sex = validatedAnimal.sex;
-
-    await userInDB.save();
-
-    console.log(`Animal actualizado. Retornando respuesta...`);
-
-    return res.send({
-      updated: Number(1),
-      msg: `Cantidad de animales actualizados correctamente: ${1}`,
-    });
+    if (foundAnimal !== null) {
+      foundAnimal.type_of_animal = validatedAnimal.type_of_animal;
+      foundAnimal.breed_name = validatedAnimal.breed_name;
+      foundAnimal.location = validatedAnimal.location;
+      foundAnimal.weight_kg = validatedAnimal.weight_kg;
+      foundAnimal.name = validatedAnimal.name;
+      foundAnimal.device_type = validatedAnimal.device_type;
+      foundAnimal.device_number = validatedAnimal.device_number;
+      foundAnimal.images = validatedAnimal.images;
+      foundAnimal.comments = validatedAnimal.comments;
+      foundAnimal.birthday = validatedAnimal.birthday;
+      foundAnimal.is_pregnant = validatedAnimal.is_pregnant;
+      foundAnimal.delivery_date = validatedAnimal.delivery_date;
+      foundAnimal.sex = validatedAnimal.sex;
+      await userInDB.save();
+      response.userAnimals++;
+    }
+    const animalInCollection = await Animal.findById(validatedAnimal._id);
+    if (animalInCollection !== null) {
+      animalInCollection.type_of_animal = validatedAnimal.type_of_animal;
+      animalInCollection.breed_name = validatedAnimal.breed_name;
+      animalInCollection.location = validatedAnimal.location;
+      animalInCollection.weight_kg = validatedAnimal.weight_kg;
+      animalInCollection.name = validatedAnimal.name;
+      animalInCollection.device_type = validatedAnimal.device_type;
+      animalInCollection.device_number = validatedAnimal.device_number;
+      animalInCollection.images = validatedAnimal.images;
+      animalInCollection.comments = validatedAnimal.comments;
+      animalInCollection.birthday = validatedAnimal.birthday;
+      animalInCollection.is_pregnant = validatedAnimal.is_pregnant;
+      animalInCollection.delivery_date = validatedAnimal.delivery_date;
+      animalInCollection.sex = validatedAnimal.sex;
+      await animalInCollection.save();
+      response.animalCollection++;
+    }
+    return res.status(200).send(response);
   } catch (error: any) {
     console.log(`Error en PUT "/animal". ${error.message}`);
-    return res.status(400).send({ error: error.message });
+    return res.status(400).send({ error: error.message, updated: response });
   }
 }
 
@@ -237,14 +270,16 @@ export async function handleSearchByQueryRequest(
 
 // GET PREGNANT ORDERED BY DELIVERY DATE :
 export async function handleGetPregnantSortedRequest(
-  req: Request,
+  req: JWTRequest,
   res: Response
 ) {
   try {
+    const user_id = req.auth?.sub;
+    if (!user_id) {
+      throw new Error("User id falso");
+    }
     const arrayOfPregnantOrderedByDeliveryDate =
-      await getPregnantInDeliveryDateOrder(
-        "google-oauth2|112862055400782384259"
-      );
+      await getPregnantInDeliveryDateOrder(user_id);
     console.log(`Retornando arreglo....`);
     return res.status(200).send(arrayOfPregnantOrderedByDeliveryDate);
   } catch (error: any) {

@@ -1,9 +1,30 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EImportance = void 0;
-var EImportance;
-(function (EImportance) {
-    EImportance["Alta"] = "Alta";
-    EImportance["Media"] = "Media";
-    EImportance["Baja"] = "Baja";
-})(EImportance = exports.EImportance || (exports.EImportance = {}));
+// export interface INote {
+//   id?: string;
+//   title?: string;
+//   theme?: string;
+//   comment: string;
+//   importance?: EImportance;
+//   UserId?: string;
+// }
+// export enum EImportance {
+//   Alta = "Alta",
+//   Media = "Media",
+//   Baja = "Baja",
+// }
+// export interface INoteMDB {
+//   _id?: string;
+//   title?: string;
+//   theme?: string;
+//   comment: string;
+//   importance?: EImportance;
+//   UserId?: string;
+// }
+// // --- probando interface con noteSchema:
+// import { Document } from "mongoose";
+// export interface INoteM {
+//   title?: string;
+//   theme?: string;
+//   comment: string;
+//   importance?: string;
+// }

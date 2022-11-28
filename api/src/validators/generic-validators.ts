@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 // IS STRING:
 export function isString(argumento: any): boolean {
   if (typeof argumento !== "string") {
@@ -136,6 +138,19 @@ export function isValidURLImage(argumento: any): boolean {
   );
 }
 
+// STRING CONTAINS URLS :
+export function stringContainsURLs(argumento: string): boolean {
+  if (
+    new RegExp(
+      "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
+    ).test(argumento)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // PARSE STRING TO BOOLEAN :
 export function stringToBoolean(argumento: any): boolean {
   if (argumento === "true") {
@@ -145,4 +160,14 @@ export function stringToBoolean(argumento: any): boolean {
     return false;
   }
   throw new Error(`El argumento '${argumento}' es inválido.`);
+}
+
+export function checkAndParseDate(dateFromReq: string): Date {
+  try {
+    let parsedAndValidated = DateTime.fromISO(dateFromReq);
+    return parsedAndValidated.toJSDate();
+  } catch (error: any) {
+    console.log(`Error en checkAndParseDate. ${error.message}`);
+    throw new Error(error.message);
+  }
 }

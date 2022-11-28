@@ -13,7 +13,7 @@ function checkAnimal(bodyFromReq) {
         const checkedAnimal = {
             _id: checkId(bodyFromReq.id_senasa),
             id_senasa: checkId(bodyFromReq.id_senasa),
-            UserId: bodyFromReq.user_id,
+            UserId: checkUserId(bodyFromReq.user_id),
             type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
             breed_name: checkBreedName(bodyFromReq.breed_name),
             sex: checkSex(bodyFromReq.sex),
@@ -23,9 +23,6 @@ function checkAnimal(bodyFromReq) {
             device_type: checkDeviceType(bodyFromReq.device_type),
             device_number: checkDeviceNumber(bodyFromReq.device_number),
             images: checkImages(bodyFromReq.images),
-            // image_1: checkImage(bodyFromReq.image_1),
-            // image_2: checkImage(bodyFromReq.image_2),
-            // image_3: checkImage(bodyFromReq.image_3),
             comments: checkComments(bodyFromReq.comments),
             birthday: checkBirthday(bodyFromReq.birthday),
             is_pregnant: checkIsPregnant(bodyFromReq.is_pregnant),
@@ -39,6 +36,13 @@ function checkAnimal(bodyFromReq) {
     }
 }
 exports.checkAnimal = checkAnimal;
+// CHECK USER ID :
+function checkUserId(userIdFromReq) {
+    if (!(0, generic_validators_1.isStringBetween1And50CharsLong)(userIdFromReq)) {
+        throw new Error(`El user id '${userIdFromReq}' es inválido.`);
+    }
+    return userIdFromReq;
+}
 // CHECK SEX :
 function checkSex(sexFromReq) {
     if (Object.values(Animal_1.ESex).includes(sexFromReq.toLowerCase())) {
@@ -169,15 +173,11 @@ function checkComments(commentsFromReq) {
     }
     throw new Error(`El comentario ingresado es inválido. Ingrese un valor falso, o un string entre 1 y 3000 caracteres.`);
 }
-//! CHECK BIRTHDAY : (corregir validación de Date con librería externa)
 function checkBirthday(birthdayFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(birthdayFromReq)) {
         return undefined;
     }
-    if ((0, generic_validators_1.isStringBetween1AndXCharsLong)(30, birthdayFromReq)) {
-        return birthdayFromReq;
-    }
-    throw new Error(`Error al validar el birthday.`);
+    return (0, generic_validators_1.checkAndParseDate)(birthdayFromReq);
 }
 // CHECK IS PREGNANT :
 function checkIsPregnant(isPregnantFromReq) {
@@ -200,8 +200,9 @@ function checkDeliveryDate(deliveryDateFromReq) {
     if ((0, generic_validators_1.isFalsyArgument)(deliveryDateFromReq)) {
         return undefined;
     }
-    if ((0, generic_validators_1.isStringXCharsLong)(10, deliveryDateFromReq)) {
-        return deliveryDateFromReq;
-    }
-    throw new Error(`La fecha de parto '${deliveryDateFromReq} no es válida.`);
+    return (0, generic_validators_1.checkAndParseDate)(deliveryDateFromReq);
+    // if (isStringXCharsLong(10, deliveryDateFromReq)) {
+    //   return deliveryDateFromReq;
+    // }
+    // throw new Error(`La fecha de parto '${deliveryDateFromReq} no es válida.`);
 }
