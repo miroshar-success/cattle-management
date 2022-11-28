@@ -1,5 +1,7 @@
-export const URL = `http://localhost:3001/`;
-// export const URL = `https://cattle-tracker-production.up.railway.app/`;
+// export const URL = `http://localhost:3001/`;
+export const URL =
+  process.env.REACT_APP_BACKEND_URI || `http://localhost:3001/`;
+
 export const URL_POST_ANIMAL = URL + "animal";
 export const USER_EXISTS = URL + "user/existsInDB";
 export const REGISTER_NEW_USER = URL + "user/register";
