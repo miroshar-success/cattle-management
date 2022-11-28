@@ -1,11 +1,12 @@
 import LogWithColors from "../miscellanea/LogWithColor";
 
 import mongoose from "mongoose";
+
 //* - - - - - - - CONNECT TO MongoDB - - - - - - - -
-import { config } from "../config/configMDB";
+const MONGO_URI = process.env.MONGO_URI || "";
 
 mongoose
-  .connect(config.mongo.url)
+  .connect(MONGO_URI)
   .then(() => {
     LogWithColors.info(" *** Connected to MongoDB! *** ");
   })
