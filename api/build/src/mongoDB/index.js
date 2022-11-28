@@ -7,9 +7,9 @@ exports.Note = exports.Animal = exports.User = void 0;
 const LogWithColor_1 = __importDefault(require("../miscellanea/LogWithColor"));
 const mongoose_1 = __importDefault(require("mongoose"));
 //* - - - - - - - CONNECT TO MongoDB - - - - - - - -
-const configMDB_1 = require("../config/configMDB");
+const MONGO_URI = process.env.MONGO_URI || "";
 mongoose_1.default
-    .connect(configMDB_1.config.mongo.url)
+    .connect(MONGO_URI)
     .then(() => {
     LogWithColor_1.default.info(" *** Connected to MongoDB! *** ");
 })
