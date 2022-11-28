@@ -3,6 +3,7 @@ import axios from "axios";
 import { URL_UPDATE_ANIMAL, URL_POST_ANIMAL } from "../../constants/urls";
 import { useDispatch, useSelector } from "react-redux";
 import * as animalActions from "../../redux/features/animals";
+import { helperParseDateForInput } from "../../constants/parseDateFn";
 
 import InputForm from "./InputForm";
 import { header } from "../../constants/token";
@@ -25,10 +26,12 @@ export function FormMdlzd({ closeModal, animal }) {
     image_2: animal?.image_2 || "",
     image_3: animal?.image_3 || "",
     comments: animal?.comments || "",
-    birthday: animal?.birthday || "",
+    birthday: helperParseDateForInput(animal?.birthday),
     is_pregnant: animal?.is_pregnant || "",
-    delivery_date: animal?.delivery_date || "",
+    delivery_date: helperParseDateForInput(animal?.delivery_date),
   });
+
+  // Transforma el formato que viene de la data base ("2022-11-01T03:00:00.000Z") a "2022-11-01".
 
   const dispatch = useDispatch();
 

@@ -39,14 +39,14 @@ export function VerticalBarChart({ statsObj, title, by }) {
         backgroundColor: [
           //novillo:
           "rgba(145, 204, 239, 0.4)",
-          // toro:
+          // vaquillona:
           "rgba(25, 68, 222, 0.4)",
-          // vaquillona :
+          // vaca :
           "rgba(219, 245, 17, 0.55)",
           // "rgba(216, 47, 25, 0.4)",
-          // vaca :
+          // toro :
           "rgba(255, 0, 70, 0.4)",
-          "rgba(255, 159, 64, 0.4)",
+          // "rgba(255, 159, 64, 0.4)",
           //----
           "rgba(153, 102, 255, 0.4)",
           "rgba(54, 162, 235, 0.4)",

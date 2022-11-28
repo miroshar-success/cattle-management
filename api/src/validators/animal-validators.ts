@@ -1,5 +1,6 @@
 import { ESex, ETypeOfAnimal, IAnimal } from "../mongoDB/models/Animal";
 import {
+  checkAndParseDate,
   isFalsyArgument,
   isStringBetween1And50CharsLong,
   isStringBetween1AndXCharsLong,
@@ -12,13 +13,13 @@ import {
 // This function is the main function that validates the data received in the request for a POST of a new animal or a PUT for updating an Animal.
 // It uses many other auxiliary functions to make sure all the data from the request is valid before trying to store a new Animal instance in the Data Base.
 // This function not only checks de data, but algo parses de name by forcing an toLowerCase() so the names are saved in all lower cases for a couple of different reasons regarding speed, performance and better practices.
-export function checkAnimal(bodyFromReq: any): IAnimal {
+export function checkAnimal(bodyFromReq: any, user_id: string): IAnimal {
   try {
     console.log(`Checking Animal...`);
     const checkedAnimal = {
       _id: checkId(bodyFromReq.id_senasa),
       id_senasa: checkId(bodyFromReq.id_senasa),
-      UserId: bodyFromReq.user_id,
+      UserId: checkUserId(user_id),
       type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
       breed_name: checkBreedName(bodyFromReq.breed_name),
       sex: checkSex(bodyFromReq.sex),
@@ -28,9 +29,6 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
       device_type: checkDeviceType(bodyFromReq.device_type),
       device_number: checkDeviceNumber(bodyFromReq.device_number),
       images: checkImages(bodyFromReq.images),
-      // image_1: checkImage(bodyFromReq.image_1),
-      // image_2: checkImage(bodyFromReq.image_2),
-      // image_3: checkImage(bodyFromReq.image_3),
       comments: checkComments(bodyFromReq.comments),
       birthday: checkBirthday(bodyFromReq.birthday),
       is_pregnant: checkIsPregnant(bodyFromReq.is_pregnant),
@@ -43,6 +41,14 @@ export function checkAnimal(bodyFromReq: any): IAnimal {
   }
 }
 
+// CHECK USER ID :
+function checkUserId(userIdFromReq: string): string {
+  if (!isStringBetween1And50CharsLong(userIdFromReq)) {
+    throw new Error(`El user id '${userIdFromReq}' es inválido.`);
+  }
+  return userIdFromReq;
+}
+
 // CHECK SEX :
 function checkSex(sexFromReq: any): ESex {
   if (Object.values(ESex).includes(sexFromReq.toLowerCase())) {
@@ -53,7 +59,7 @@ function checkSex(sexFromReq: any): ESex {
 }
 
 // CHECK IMAGES :
-function checkImages(imagesArrayFromReq: string[]): string[] | [void] {
+function checkImages(imagesArrayFromReq: string[]): string[] {
   let imagesChecked: string[] = [];
   if (isFalsyArgument(imagesArrayFromReq)) {
     return [];
@@ -186,16 +192,11 @@ function checkComments(commentsFromReq: any): string | undefined {
   );
 }
 
-//! CHECK BIRTHDAY : (corregir validación de Date con librería externa)
-function checkBirthday(birthdayFromReq: any): string | undefined {
+function checkBirthday(birthdayFromReq: any): Date | undefined {
   if (isFalsyArgument(birthdayFromReq)) {
     return undefined;
   }
-  if (isStringBetween1AndXCharsLong(30, birthdayFromReq)) {
-    return birthdayFromReq;
-  }
-
-  throw new Error(`Error al validar el birthday.`);
+  return checkAndParseDate(birthdayFromReq);
 }
 
 // CHECK IS PREGNANT :
@@ -218,12 +219,13 @@ function checkIsPregnant(isPregnantFromReq: any): boolean | undefined {
 }
 
 //! CHECK DELIVERY DATE : (corregir validación de Date con librería externa)
-function checkDeliveryDate(deliveryDateFromReq: any): string | undefined {
+function checkDeliveryDate(deliveryDateFromReq: any): Date | undefined {
   if (isFalsyArgument(deliveryDateFromReq)) {
     return undefined;
   }
-  if (isStringXCharsLong(10, deliveryDateFromReq)) {
-    return deliveryDateFromReq;
-  }
-  throw new Error(`La fecha de parto '${deliveryDateFromReq} no es válida.`);
+  return checkAndParseDate(deliveryDateFromReq);
+  // if (isStringXCharsLong(10, deliveryDateFromReq)) {
+  //   return deliveryDateFromReq;
+  // }
+  // throw new Error(`La fecha de parto '${deliveryDateFromReq} no es válida.`);
 }

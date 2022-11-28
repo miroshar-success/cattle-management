@@ -18,6 +18,7 @@
     "url": "https://github.com/RobTangle/Cattle-tracker/"
   },
   "dependencies": {
+    "@types/luxon": "^3.1.0",
     "chalk": "4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -25,6 +26,7 @@
     "express-jwt": "^7.7.5",
     "helmet": "^6.0.0",
     "jwks-rsa": "^2.1.5",
+    "luxon": "^3.1.0",
     "mongoose": "^6.7.2",
     "morgan": "^1.10.0",
     "pg": "^8.8.0",

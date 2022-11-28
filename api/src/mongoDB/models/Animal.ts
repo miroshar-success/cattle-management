@@ -12,13 +12,10 @@ export interface IAnimal {
   device_type: string;
   device_number: string;
   comments?: string;
-  images?: any[];
-  image_1?: string;
-  image_2?: string;
-  image_3?: string;
-  birthday?: string;
+  images?: string[];
+  birthday?: Date;
   is_pregnant?: boolean;
-  delivery_date?: string;
+  delivery_date?: Date;
   UserId: string;
 }
 
@@ -57,8 +54,7 @@ export const animalSchema: Schema = new Schema<IAnimal>(
     birthday: { type: Date, required: false },
     is_pregnant: { type: Boolean, default: false, required: false },
     delivery_date: { type: Date, required: false },
-    UserId: { type: String, ref: "User", required: true }, //! ref "User"
-    // UserId: { type: String, required: true, reference: "User" },
+    UserId: { type: String, ref: "User", required: true },
   },
   { timestamps: true }
 );

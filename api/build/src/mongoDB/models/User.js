@@ -16,7 +16,5 @@ exports.userSchema = new mongoose_1.Schema({
     },
     profile_img: { type: String, required: false },
     animals: [Animal_1.animalSchema],
-    animalsPop: [{ type: String, ref: "Animal" }],
     notes: [Note_1.noteSchema],
 }, { timestamps: true });
-// export const User = mongoose.model<IUserModel>("User", userSchema);

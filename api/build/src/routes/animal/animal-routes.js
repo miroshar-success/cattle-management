@@ -16,5 +16,5 @@ router.get("/id/:id_senasa", jwtMiddleware_1.default, animal_r_middlewares_1.han
 router.put("/", jwtMiddleware_1.default, animal_r_middlewares_1.handleUpdateAnimalRequest);
 router.get("/typesAllowed", animal_r_middlewares_1.handleGetTypesAllowedRequest);
 router.get("/search", jwtMiddleware_1.default, animal_r_middlewares_1.handleSearchByQueryRequest);
-router.get("/pregnant", animal_r_middlewares_1.handleGetPregnantSortedRequest);
+router.get("/pregnant", jwtMiddleware_1.default, animal_r_middlewares_1.handleGetPregnantSortedRequest);
 exports.default = router;

@@ -24,6 +24,6 @@ router.get("/id/:id_senasa", jwtCheck, handleGetAnimalByIdRequest);
 router.put("/", jwtCheck, handleUpdateAnimalRequest);
 router.get("/typesAllowed", handleGetTypesAllowedRequest);
 router.get("/search", jwtCheck, handleSearchByQueryRequest);
-router.get("/pregnant", handleGetPregnantSortedRequest);
+router.get("/pregnant", jwtCheck, handleGetPregnantSortedRequest);
 
 export default router;

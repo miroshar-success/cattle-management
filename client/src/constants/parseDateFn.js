@@ -26,3 +26,12 @@ export function parseDateWithNoHours(date) {
     return null;
   }
 }
+
+export function helperParseDateForInput(date) {
+  if (!date) {
+    return "";
+  } else {
+    let parsedDate = date.split("T")[0];
+    return parsedDate;
+  }
+}

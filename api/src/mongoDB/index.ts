@@ -16,13 +16,13 @@ mongoose
   });
 
 //* - - - - - - - - MODELS : - - - - - - - -
-import { noteSchema } from "./models/Note";
-import { userSchema } from "./models/User";
-import { animalSchema } from "./models/Animal";
+import { INote, noteSchema } from "./models/Note";
+import { IUser, userSchema } from "./models/User";
+import { animalSchema, IAnimal } from "./models/Animal";
 
-export const User = mongoose.model("User", userSchema);
-export const Animal = mongoose.model("Animal", animalSchema);
-export const Note = mongoose.model("Note", noteSchema);
+export const User = mongoose.model<IUser>("User", userSchema);
+export const Animal = mongoose.model<IAnimal>("Animal", animalSchema);
+export const Note = mongoose.model<INote>("Note", noteSchema);
 
 LogWithColors.info(
   " **************** MongoDB INDEX running! **************** "

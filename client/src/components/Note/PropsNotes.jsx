@@ -7,7 +7,7 @@ import { parseDate } from "../../constants/parseDateFn";
 
 export function PropsNotes({ notes }) {
   const [page, setPage] = useState(1);
-  const showPerPage = 4;
+  const showPerPage = 8;
   const lastOnPage = page * showPerPage;
   const firstOnPage = lastOnPage - showPerPage;
   const currentNotes = notes.slice(firstOnPage, lastOnPage);
