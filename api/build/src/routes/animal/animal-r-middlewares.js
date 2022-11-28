@@ -54,7 +54,7 @@ async function handlePostNewAnimalRequest(req, res) {
         const userInDB = await (0, user_r_auxiliary_1.getUserByIdOrThrowError)(user_id);
         console.log(`REQ.BODY = `);
         console.log(req.body);
-        const validatedNewAnimal = (0, animal_validators_1.checkAnimal)(Object.assign(Object.assign({}, req.body), { user_id }));
+        const validatedNewAnimal = (0, animal_validators_1.checkAnimal)(req.body, user_id);
         const newAnimalCreated = await mongoDB_1.Animal.create(validatedNewAnimal);
         userInDB.animals.push(newAnimalCreated);
         // userInDB.animalsPop.push(newAnimalCreated._id);
@@ -153,7 +153,7 @@ async function handleUpdateAnimalRequest(req, res) {
             throw new Error("El user id es falso");
         }
         const userInDB = await (0, user_r_auxiliary_1.getUserByIdOrThrowError)(userId);
-        const validatedAnimal = (0, animal_validators_1.checkAnimal)(Object.assign(Object.assign({}, req.body), { userId }));
+        const validatedAnimal = (0, animal_validators_1.checkAnimal)(req.body, userId);
         let foundAnimal = userInDB.animals.id(validatedAnimal._id);
         if (foundAnimal !== null) {
             foundAnimal.type_of_animal = validatedAnimal.type_of_animal;
