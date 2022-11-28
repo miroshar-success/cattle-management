@@ -2,9 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { AnimalCard } from "../AnimalCard/AnimalCard";
 import { Pagination } from "../Pagination/Pagination";
+import { parseDate } from "../../constants/parseDateFn";
 export function PropsColumns({ animals }) {
   const [page, setPage] = useState(1);
-  const showPerPage = 4;
+  const showPerPage = 8;
   const lastOnPage = page * showPerPage;
   const firstOnPage = lastOnPage - showPerPage;
   const currentAnimals = animals.slice(firstOnPage, lastOnPage);
@@ -32,10 +33,13 @@ export function PropsColumns({ animals }) {
                   Nombre
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Dispositivo
+                  Raza
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Nro. de dispositivo
+                  Nro. de disp.
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Última edición
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Acciones
@@ -71,12 +75,17 @@ export function PropsColumns({ animals }) {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap capitalize">
-                      {animal?.device_type}
+                      {animal?.breed_name}
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap capitalize">
                       {animal?.device_number}
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap capitalize">
+                      {parseDate(animal?.updatedAt)}
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
