@@ -16,7 +16,7 @@ root.render(
       redirectUri={window.location.origin}
       useRefreshTokens={true}
       cacheLocation="localstorage"
-      audience={REACT_APP_JWT_AUDIENCE}
+      audience={process.env.REACT_APP_JWT_AUDIENCE}
       // scope="read:current_user update:current_user_metadata"
     >
       <Provider store={store}>
