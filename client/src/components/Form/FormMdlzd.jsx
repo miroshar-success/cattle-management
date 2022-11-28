@@ -25,10 +25,20 @@ export function FormMdlzd({ closeModal, animal }) {
     image_2: animal?.image_2 || "",
     image_3: animal?.image_3 || "",
     comments: animal?.comments || "",
-    birthday: animal?.birthday || "",
+    birthday: helperParseDateForInput(animal?.birthday),
     is_pregnant: animal?.is_pregnant || "",
-    delivery_date: animal?.delivery_date || "",
+    delivery_date: helperParseDateForInput(animal?.delivery_date),
   });
+
+  // Transforma el formato que viene de la data base ("2022-11-01T03:00:00.000Z") a "2022-11-01".
+  function helperParseDateForInput(date) {
+    if (!date) {
+      return "";
+    } else {
+      let parsedDate = date.split("T")[0];
+      return parsedDate;
+    }
+  }
 
   const dispatch = useDispatch();
 

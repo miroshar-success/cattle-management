@@ -13,13 +13,13 @@ import {
 // This function is the main function that validates the data received in the request for a POST of a new animal or a PUT for updating an Animal.
 // It uses many other auxiliary functions to make sure all the data from the request is valid before trying to store a new Animal instance in the Data Base.
 // This function not only checks de data, but algo parses de name by forcing an toLowerCase() so the names are saved in all lower cases for a couple of different reasons regarding speed, performance and better practices.
-export function checkAnimal(bodyFromReq: any): IAnimal {
+export function checkAnimal(bodyFromReq: any, user_id: string): IAnimal {
   try {
     console.log(`Checking Animal...`);
     const checkedAnimal = {
       _id: checkId(bodyFromReq.id_senasa),
       id_senasa: checkId(bodyFromReq.id_senasa),
-      UserId: checkUserId(bodyFromReq.user_id),
+      UserId: checkUserId(user_id),
       type_of_animal: checkTypeOfAnimal(bodyFromReq.type_of_animal),
       breed_name: checkBreedName(bodyFromReq.breed_name),
       sex: checkSex(bodyFromReq.sex),

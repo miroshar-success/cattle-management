@@ -62,7 +62,7 @@ export async function handlePostNewAnimalRequest(
 
     console.log(`REQ.BODY = `);
     console.log(req.body);
-    const validatedNewAnimal = checkAnimal({ ...req.body, user_id });
+    const validatedNewAnimal = checkAnimal(req.body, user_id);
     const newAnimalCreated = await Animal.create(validatedNewAnimal);
     userInDB.animals.push(newAnimalCreated);
     // userInDB.animalsPop.push(newAnimalCreated._id);
@@ -170,7 +170,7 @@ export async function handleUpdateAnimalRequest(
     }
 
     const userInDB = await getUserByIdOrThrowError(userId);
-    const validatedAnimal: IAnimal = checkAnimal({ ...req.body, userId });
+    const validatedAnimal: IAnimal = checkAnimal(req.body, userId);
 
     let foundAnimal = userInDB.animals.id(validatedAnimal._id);
     if (foundAnimal !== null) {
