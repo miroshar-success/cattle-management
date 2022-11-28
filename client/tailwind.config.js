@@ -20,6 +20,8 @@ module.exports = {
         home: "url('https://res.cloudinary.com/dfbxjt69z/image/upload/v1667056185/cattle/cow-g2aa95d650_1920_zyzlwk.jpg')",
         home1:
           "url('https://res.cloudinary.com/dfbxjt69z/image/upload/v1667154569/cattle/pexels-mark-stebnicki-2252557_gxlkhg.jpg')",
+        home2:
+          "url('https://res.cloudinary.com/dfbxjt69z/image/upload/v1667154563/cattle/pexels-jake-heinemann-1482101_hnztpe.jpg')",
       },
       fontFamily: {
         sans: ["Helvetica", "system-ui", "sans-serif"],

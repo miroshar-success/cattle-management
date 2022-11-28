@@ -9,6 +9,7 @@ import {
   Details,
 } from "./views";
 import { Dashboard } from "./views/Dashboard/Dashboard";
+import { Team } from "./views/Team/Team";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route exact path="/home/statistics" element={<Dashboard />} />
           <Route exact path="/home/profile" element={<Profile />} />
           <Route exact path="/details/:id" element={<Details />} />
+          <Route exact path="/team" element={<Team />} />
         </Routes>
       </BrowserRouter>
     </div>
