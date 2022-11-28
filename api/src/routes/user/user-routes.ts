@@ -11,7 +11,7 @@ import {
 
 router.post("/register", jwtCheck, handleRegisterNewUser);
 router.get("/existsInDB", jwtCheck, handleDoesUserExistInDB);
-router.get("/userInfo", handleGetUserInfo);
+router.get("/userInfo", jwtCheck, handleGetUserInfo);
 // router.get("/", getAllUsersInDB);
 
 export default router;
