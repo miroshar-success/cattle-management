@@ -1,16 +1,11 @@
-// import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { useDispatch } from "react-redux";
-import {
-  getAllAnimals,
-  deleteAnimal,
-} from "../../redux/features/animals";
+import { getAllAnimals, deleteAnimal } from "../../redux/features/animals";
 
 import { ModalEdit } from "../Modal/ModalEdit";
 import { Link } from "react-router-dom";
 import { TbListDetails } from "react-icons/tb";
 import { BiEditAlt } from "react-icons/bi";
-
 
 export function AnimalCard({ animal }) {
   const dispatch = useDispatch();

@@ -5,12 +5,10 @@ import axios from "axios";
 import { header } from "../../constants/token";
 import { PropsPregnantStatistics } from "../PropsColumns/PropsPregnantStatistics";
 
-export function CardPregnantStatistics({ animalsToRender }) {
+export function CardPregnantStatistics() {
   const tokenAccess = localStorage.getItem("tokenCattleTracker");
   const [pregnant, setPregnant] = useState("");
   React.useEffect(() => {
-    console.log(`en el useEffect de CardPregnantStatistics`);
-
     async function getPregnantAnimals(token) {
       const response = await axios.get(URL + "animal/pregnant", header(token));
       console.log(response.data);

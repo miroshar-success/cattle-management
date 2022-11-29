@@ -5,7 +5,6 @@ import {
   setUserAnimalsToLoading,
 } from "../../redux/features/animals";
 import loading from "../../assets/loading.gif";
-// import { Pagination } from "../Pagination/Pagination";
 import { PropsColumns } from "../PropsColumns/PropsColumns";
 
 export function CardContainer(props) {

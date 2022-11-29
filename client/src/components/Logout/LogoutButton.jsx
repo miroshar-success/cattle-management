@@ -5,7 +5,7 @@ export const LogoutButton = () => {
   const { logout } = useAuth0();
 
   return (
-    <div className="pb-3 w-fit border-solid border-b-2 border-transparent hover:border-green ease-in-out  hover:text-green  hover:cursor-pointer transition-all duration-300 ">
+    <div className="pb-3 w-fit border-solid border-b-2 border-transparent hover:border-green ease-in-out  hover:text-green  hover:cursor-pointer transition-all duration-300 self-center">
       <button
         onClick={() => {
           localStorage.removeItem("tokenCattleTracker");

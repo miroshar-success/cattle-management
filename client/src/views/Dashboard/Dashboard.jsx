@@ -7,7 +7,6 @@ import { getStats, setStatsToLoading } from "../../redux/features/animals";
 import { DoughnutChart } from "../../charts/DoughnutChart";
 import "./dashboard.css";
 import { PieChart } from "../../charts/PieChart";
-import { VerticalBarChartPreg } from "../../charts/VerticalBarChartPreg";
 import { VerticalBarChart } from "../../charts/VerticalBarChart";
 import { CardFilterContainer } from "../../components/CardContainer/CardFilterContainer";
 import { PieChartTwoObj } from "../../charts/PieChartTwoObj";
@@ -253,39 +252,6 @@ export function Dashboard() {
                 )}
               </div>
               <br />
-              {/* <div className="lg:flex flex-col justify-center items-center">
-                <h2 className="text-green text-2xl my-5">
-                  Estado de embarazo de hembras
-                </h2>
-                <div className="graph600">
-                  {statsState?.sex && (
-                    <VerticalBarChartPreg
-                      statsObjPreg={statsState?.sex?.femalePregnant}
-                      statsObjNotPreg={statsState?.sex?.femaleNotPregnant}
-                    />
-                  )}
-                </div>
-                <div className="flex items-center gap-5 justify-center w-full my-5">
-                  <FilterCustomBtn
-                    tag={"Preñadas"}
-                    value={"femalePregnant"}
-                    name="pregnant"
-                    onClick={handleFilterChange}
-                  />
-                  <FilterCustomBtn
-                    tag={"No preñadas"}
-                    value={"femaleNotPregnant"}
-                    name="pregnant"
-                    onClick={handleFilterChange}
-                  />
-                  <FilterCustomBtn
-                    tag={"Limpiar"}
-                    value={""}
-                    name="pregnant"
-                    onClick={handleFilterChange}
-                  />
-                </div>
-              </div> */}
               <div>
                 {filters?.pregnant && statsState?.sex?.[filters.pregnant] && (
                   <CardFilterContainer

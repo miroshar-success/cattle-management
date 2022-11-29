@@ -54,17 +54,17 @@ export default function Footer() {
                   <NavbarLink
                     path="/home/management"
                     text="Administrar animales"
-                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300"
+                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300 self-center"
                   />
                   <NavbarLink
                     path="/home/statistics"
                     text="Dashboard"
-                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300"
+                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300 self-center"
                   />
                   <NavbarLink
                     path="/home/profile"
                     text="Perfil & Notas"
-                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300"
+                    divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300 self-center"
                   />
 
                   <div>

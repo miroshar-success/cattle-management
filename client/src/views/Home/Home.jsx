@@ -6,12 +6,10 @@ import axios from "axios";
 import { USER_EXISTS } from "../../constants/urls";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
-
 //import icons:
 import privateSecurityIcon from "../../assets/privateSecurityIcon.png";
 import analyticsIcon from "../../assets/analyticsIcon.png";
 import notepad1 from "../../assets/notepad-90.png";
-
 import mongodbIcon2 from "../../assets/mongodb96.png";
 
 export function Home() {

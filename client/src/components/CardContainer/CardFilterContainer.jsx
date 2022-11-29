@@ -1,5 +1,4 @@
 import React from "react";
-import { Pagination } from "../Pagination/Pagination";
 import { PropsPregnantStatistics } from "../PropsColumns/PropsPregnantStatistics";
 
 export function CardFilterContainer({ animalsToRender }) {

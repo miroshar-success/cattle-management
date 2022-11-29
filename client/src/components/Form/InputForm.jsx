@@ -11,11 +11,8 @@ export default function InputForm({
   required,
   styleText,
 }) {
-  let divClassName = "flex items-center gap-3 mb-3 w-full";
   let labelClassName =
     "text-gray font-semibold w-[120px] md:w-[130px] text-sm ";
-  let inputClassName =
-    "bg-gray/10 border border-solid border-gray/10 rounded-sm px-3 py-1  w-full";
 
   // SI DEBE SER UN INPUT OBLIGATORIO, RENDERIZO ESTE LABEL E INPUT:
   if (required === "true") {
