@@ -5,11 +5,13 @@ const mongoDB_1 = require("../../mongoDB/");
 async function getAllNotesFromUser(userId) {
     try {
         let userFound = await mongoDB_1.User.findById(userId);
-        if (userFound !== null) {
+        if (userFound === null) {
+            throw new Error(`El usuario con id '${userId}' no está registrado en la base de datos.`);
+        }
+        else {
             let allNotesFromUser = userFound.notes;
             return allNotesFromUser;
         }
-        throw new Error(`No se encontró al usuario en la base de datos.`);
     }
     catch (error) {
         throw new Error(error.message);

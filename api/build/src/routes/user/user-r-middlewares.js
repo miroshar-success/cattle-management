@@ -52,7 +52,7 @@ async function handleGetUserInfo(req, res) {
     try {
         const userId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
         // await throwErrorIfUserIsNotRegisteredInDB(userId);
-        const userInfo = await mongoDB_1.User.findById(userId).populate("animalsPop");
+        const userInfo = await mongoDB_1.User.findById(userId).lean();
         if (!userInfo) {
             throw new Error(`El usuario con id '${userId}'no fue encontrado en la Data Base`);
         }
