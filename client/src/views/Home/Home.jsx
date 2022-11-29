@@ -77,18 +77,20 @@ export function Home() {
             intuitivo y fácil de usar.
           </p>
         </div>
-        <div className="md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition-all duration-500] flex flex-col items-center gap-3 ">
+        <div className=" flex flex-col items-center gap-3 md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition duration-500]">
           <div className="w-full h-16 md:h-20">
             <img
               className="w-full h-full object-contain object-center"
-              src={mongodbIcon2}
-              alt=""
+              src={privateSecurityIcon}
+              alt="Secure and private icon"
             />
           </div>
-          <p className="text-2xl font-sans md:mb-3 md:text-3xl">MongoDB</p>
+          <p className="text-2xl font-sans md:mb-3 md:text-3xl">
+            Segura y privada
+          </p>
           <p className="text-center text-xl">
-            Usamos MongoDB, una de las más modernas y seguras base de datos del
-            mercado.
+            Sólo usted puede acceder a sus registros ingresando con su cuenta
+            personal. Sus datos están protegidos.
           </p>
         </div>
         <div className="md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition-all duration-500] flex flex-col items-center gap-3 ">
@@ -106,22 +108,20 @@ export function Home() {
           </p>
         </div>
       </div>
-      {/* Features :  */}
+
       <div className="flex flex-col  md:grid md:grid-cols-3 max-w-5xl mx-auto gap-3 md:my-28 items-start px-5 md:px-0 my-5">
-        <div className=" flex flex-col items-center gap-3 md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition duration-500]">
+        <div className="md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition-all duration-500] flex flex-col items-center gap-3 ">
           <div className="w-full h-16 md:h-20">
             <img
               className="w-full h-full object-contain object-center"
-              src={privateSecurityIcon}
-              alt="Secure and private icon"
+              src={mongodbIcon2}
+              alt=""
             />
           </div>
-          <p className="text-2xl font-sans md:mb-3 md:text-3xl">
-            Segura y privada
-          </p>
+          <p className="text-2xl font-sans md:mb-3 md:text-3xl">MongoDB</p>
           <p className="text-center text-xl">
-            Sólo usted puede acceder a sus registros logueandose con su cuenta
-            personal. Sus datos están seguros.
+            Usamos MongoDB, una de las más modernas y seguras base de datos del
+            mercado.
           </p>
         </div>
         <div className="md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition-all duration-500] flex flex-col items-center gap-3 ">
@@ -151,7 +151,7 @@ export function Home() {
           </p>
           <p className="text-center text-xl">
             Cree y guarde notas y recordatorios relacionadas a su actividad
-            ganadera de forma práctica y simple.
+            ganadera de forma práctica y simple, en un solo lugar.
           </p>
         </div>
       </div>
