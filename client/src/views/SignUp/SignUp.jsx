@@ -34,7 +34,7 @@ export const SignUp = () => {
         header(tokenAccess)
       );
       console.log("response.status = ", response.status);
-      if (response.status === 200 || response.status === 204) {
+      if (response.status === 200 || response.status === 201) {
         setIsRegistered({ status: true });
       }
     } catch (error) {
