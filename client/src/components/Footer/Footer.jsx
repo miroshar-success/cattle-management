@@ -47,7 +47,7 @@ export default function Footer() {
               <NavbarLink
                 path="/team"
                 text="Equipo"
-                divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300"
+                divStyle="border-transparent border-solid hover:bg-transparent hover:text-green hover:border-green  transition duration-300 self-center"
               />
               {!isLoading && isAuthenticated ? (
                 <>
