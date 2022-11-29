@@ -11,8 +11,8 @@ import Footer from "../../components/Footer/Footer";
 import privateSecurityIcon from "../../assets/privateSecurityIcon.png";
 import analyticsIcon from "../../assets/analyticsIcon.png";
 import notepad1 from "../../assets/notepad-90.png";
-import notepad2 from "../../assets/notepad-96.png";
-import notepad3 from "../../assets/notepad-100.png";
+
+import mongodbIcon2 from "../../assets/mongodb96.png";
 
 export function Home() {
   const { user, isAuthenticated, getAccessTokenSilently, isLoading } =
@@ -81,14 +81,14 @@ export function Home() {
           <div className="w-full h-16 md:h-20">
             <img
               className="w-full h-full object-contain object-center"
-              src="https://res.cloudinary.com/dfbxjt69z/image/upload/v1668785593/cattle/o_3_t7xk7s.png"
+              src={mongodbIcon2}
               alt=""
             />
           </div>
-          <p className="text-2xl font-sans md:mb-3 md:text-3xl">Sin costo</p>
+          <p className="text-2xl font-sans md:mb-3 md:text-3xl">MongoDB</p>
           <p className="text-center text-xl">
-            ¡Es totalmente gratuito! No hay necesidad de pagar nada. ¡Comience a
-            organizarse hoy!
+            Usamos MongoDB, una de las más modernas y seguras base de datos del
+            mercado.
           </p>
         </div>
         <div className="md:h-52 w-full rounded-sm py-5 px-2  text-green hover:scale-[1.01] transition-all duration-500] flex flex-col items-center gap-3 ">
@@ -99,9 +99,10 @@ export function Home() {
               alt=""
             />
           </div>
-          <p className="text-2xl font-sans md:mb-3 md:text-3xl">Ilimitado</p>
+          <p className="text-2xl font-sans md:mb-3 md:text-3xl">Sin costo</p>
           <p className="text-center text-xl">
-            Sin límite en la cantidad de animales que quiera registrar.
+            ¡Es totalmente gratuito! No hay necesidad de pagar nada. ¡Comience a
+            organizarse hoy!
           </p>
         </div>
       </div>
