@@ -57,7 +57,7 @@ export const Profile = () => {
             </div>
             <div className="flex items-center gap-3">
               <p className="text-gray font-semibold">Animales registrados </p>
-              <p>{userInfoState?.animalsPop?.length}</p>
+              <p>{userInfoState?.animals?.length}</p>
             </div>
           </div>
         )}
