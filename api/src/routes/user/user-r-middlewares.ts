@@ -1,10 +1,10 @@
 import { Request as JWTRequest } from "express-jwt";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { emailExistsInDataBase } from "./user-r-auxiliary";
 import { validateNewUser } from "../../validators/user-validators";
 // -------- MONGO / MONGOOSE : ------------
 import { User } from "../../mongoDB/";
-import { INewUser, IUser } from "../../mongoDB/models/User";
+import { INewUser } from "../../mongoDB/models/User";
 
 // POST NEW USER
 export async function handleRegisterNewUser(req: JWTRequest, res: Response) {
@@ -35,6 +35,7 @@ export async function handleRegisterNewUser(req: JWTRequest, res: Response) {
 export async function handleDoesUserExistInDB(req: JWTRequest, res: Response) {
   try {
     const userId = req.auth?.sub;
+
     // const isUserRegisteredinDB = await userIsRegisteredInDB(userId);
     const isUserRegisteredinDB = await User.findById(userId).lean();
     if (isUserRegisteredinDB) {
@@ -55,7 +56,7 @@ export async function handleGetUserInfo(req: JWTRequest, res: Response) {
   try {
     const userId = req.auth?.sub;
     // await throwErrorIfUserIsNotRegisteredInDB(userId);
-    const userInfo = await User.findById(userId).populate("animalsPop");
+    const userInfo = await User.findById(userId).lean();
     if (!userInfo) {
       throw new Error(
         `El usuario con id '${userId}'no fue encontrado en la Data Base`

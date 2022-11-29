@@ -12,9 +12,13 @@ const router = Router();
 
 // - - - - - - - - - - RUTAS : - - - - - - - - - -
 
+// CREATE NEW NOTE :
 router.post("/newNote", jwtCheck, handleCreateNewNote);
+// GET ALL NOTES FROM USER :
 router.get("/all", jwtCheck, handleGetAllNotesFromUser);
-router.delete("/:id", handleDeleteNoteRequest);
+// DELETE NOTE :
+router.delete("/:id", jwtCheck, handleDeleteNoteRequest);
+// UPDATE NOTE :
 router.put("/", jwtCheck, handleUpdateNoteRequest);
 
 export default router;

@@ -1,6 +1,5 @@
 import { Request as JWTRequest } from "express-jwt";
 import { Response } from "express";
-import { throwErrorIfUserIsNotRegisteredInDB } from "../user/user-r-auxiliary";
 import { validateNewNoteMDB } from "../../validators/note-validators";
 import { getAllNotesFromUser } from "./note-r-auxiliary";
 import { Note, User } from "../../mongoDB/";
@@ -10,27 +9,25 @@ import { INote } from "../../mongoDB/models/Note";
 export async function handleCreateNewNote(req: JWTRequest, res: Response) {
   try {
     console.log("NEW NOTE BODY = ", req.body);
-
     const user_id = req.auth?.sub;
-    throwErrorIfUserIsNotRegisteredInDB(user_id);
-    let checkedNoteObj = validateNewNoteMDB(req.body);
+    let validatedNoteObj = validateNewNoteMDB(req.body);
     console.log("Nota validada...");
 
-    // const newNote = await db.Note.create(checkedNoteObj);
-    let notesOwner = await User.findById(user_id);
-    if (notesOwner) {
+    // const newNote = await db.Note.create(validatedNoteObj);
+    let userInDB = await User.findById(user_id);
+    if (userInDB) {
       console.log("usuario encontrado por id...");
-      console.log(notesOwner);
+      console.log(userInDB);
 
-      let nuevaNota = await Note.create(checkedNoteObj);
+      let nuevaNota = await Note.create(validatedNoteObj);
       console.log("Nueva nota = ", nuevaNota);
 
-      notesOwner?.notes?.push(nuevaNota);
+      userInDB.notes.push(nuevaNota);
       console.log("nota pusheada...");
 
-      await notesOwner.save();
+      await userInDB.save();
 
-      return res.status(201).send(checkedNoteObj);
+      return res.status(201).send(validatedNoteObj);
     } else {
       return res
         .status(404)
@@ -52,7 +49,6 @@ export async function handleGetAllNotesFromUser(
     if (!userId) {
       throw new Error("El user id no puede ser falso.");
     }
-    throwErrorIfUserIsNotRegisteredInDB(userId);
     const allNotesFromUser = await getAllNotesFromUser(userId);
     return res.status(200).send(allNotesFromUser);
   } catch (error: any) {
@@ -65,24 +61,40 @@ export async function handleGetAllNotesFromUser(
 export async function handleDeleteNoteRequest(req: JWTRequest, res: Response) {
   try {
     const noteIdFromParams = req.params.id;
-    console.log("noteIdFromParams = ", noteIdFromParams);
+    const userId = req.auth?.sub;
 
     if (!noteIdFromParams) {
       throw new Error(`Error. Debe ingresar un id por params.`);
     }
+    let response = {
+      noteInDB: 0,
+      userNote: 0,
+      total: 0,
+      status: false,
+      msg: "",
+    };
+    const noteInDB = await Note.findByIdAndDelete(noteIdFromParams);
+    if (noteInDB) {
+      response.noteInDB++;
+      response.total++;
+    }
+    const userInDB = await User.findById(userId);
 
-    const userId = req.auth?.sub;
-    let userInDB = await User.findById(userId);
     if (userInDB) {
       let noteFound = userInDB.notes.id(noteIdFromParams);
-      console.log("NOTE FOUND = ", noteFound);
-      userInDB.notes.id(noteIdFromParams)?.remove();
-      await userInDB.save();
-      console.log("Documento borrado.");
-      // console.log(userInDB);
-      return res
-        .status(200)
-        .send({ msg: "Nota eliminada exitosamente", status: true });
+
+      if (noteFound) {
+        console.log("NOTE FOUND = ", noteFound);
+        noteFound.remove();
+        await userInDB.save();
+        console.log("Documento borrado.");
+        // userInDB.notes.id(noteIdFromParams)?.remove();
+        // console.log(userInDB);
+        response.userNote++;
+        response.total++;
+        response.status = true;
+        return res.status(200).send(response);
+      }
     } else {
       throw new Error("Usuario no encontrado en la base de datos.");
     }
@@ -97,24 +109,36 @@ export async function handleUpdateNoteRequest(req: JWTRequest, res: Response) {
   try {
     console.log(req.body);
     const noteId = req.body._id;
-    console.log("NOTE ID = ", noteId);
-
     const userId = req.auth?.sub;
-    await throwErrorIfUserIsNotRegisteredInDB(userId);
+    let response = {
+      noteInDB: 0,
+      userNote: 0,
+      total: 0,
+      status: false,
+      msg: "",
+    };
     const validatedNote: INote = validateNewNoteMDB(req.body);
 
-    let foundUser = await User.findById(userId);
-    if (foundUser) {
-      let noteToUpdate = foundUser?.notes.id(noteId);
+    let noteInDB = await Note.findByIdAndUpdate(noteId, validatedNote);
+    if (noteInDB) {
+      response.noteInDB++;
+      response.total++;
+    }
+
+    let userInDB = await User.findById(userId);
+    if (userInDB) {
+      let noteToUpdate = userInDB.notes.id(noteId);
       if (noteToUpdate) {
         noteToUpdate.title = validatedNote.title;
         noteToUpdate.comment = validatedNote.comment;
         noteToUpdate.theme = validatedNote.theme;
         noteToUpdate.importance = validatedNote.importance;
         console.log("noteToUpdate Updated = ", noteToUpdate);
-        await foundUser.save();
-        console.log("USER AFTER SAVE = ", foundUser);
-        return res.status(201).send({ updated: 1, msg: "Nota actualizada." });
+        await userInDB.save();
+        response.userNote++;
+        response.total++;
+        response.status = true;
+        return res.status(201).send(response);
       } else {
         throw new Error("Nota a editar no encontrada.");
       }
