@@ -23,9 +23,9 @@ export default function Footer() {
               fill="currentColor"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
           </a>
@@ -42,7 +42,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <nav ariaLabel="Footer Nav" className="mt-12 lg:mt-0">
+          <nav aria-label="Footer Nav" className="mt-12 lg:mt-0">
             <div className="flex flex-wrap justify-center gap-3 md:gap-5 lg:justify-end lg:gap-8">
               <NavbarLink
                 path="/team"

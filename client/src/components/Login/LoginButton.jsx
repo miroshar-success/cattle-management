@@ -26,14 +26,15 @@ const LoginButton = () => {
         });
 
         if (existe.data.msg) {
-          console.log(
-            "Usuario existe en la DB. Redireccionando/navigate a /home"
-          );
+          // console.log(
+          //   "Usuario existe en la DB. Redireccionando/navigate a /home"
+          // );
           if (!isLoading && isAuthenticated) {
-           navigate("/home");}
+            navigate("/home");
+          }
         }
         if (existe.data.msg === false) {
-          console.log(`Usuario no existe en la DB. Navigate to "/register"`);
+          // console.log(`Usuario no existe en la DB. Navigate to "/register"`);
           navigate("/register");
         }
       }
