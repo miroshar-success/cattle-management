@@ -8,11 +8,6 @@ export function NoteModalEdit(props) {
   const updatedNote = useSelector((state) => state.notes.updatedNote);
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    console.log(`useEffect de NoteModalEdit...`);
-    // dispatch(cleanUpdateNote());
-  }, []);
-
   if (!props.show) {
     return null;
   }
