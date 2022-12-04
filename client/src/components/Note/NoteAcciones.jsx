@@ -10,27 +10,11 @@ export function NoteAcciones({ note }) {
   const [showValue, setShowValue] = React.useState(false);
 
   function handleDeleteWithPrompt(e) {
-    console.log(e.target);
-    let confirmPrompt = prompt(
-      "Para confirmar la eliminación, escriba 'ELIMINAR'."
-    );
-    if (
-      confirmPrompt === "ELIMINAR" ||
-      confirmPrompt === "eliminar" ||
-      confirmPrompt === "Eliminar"
-    ) {
-      console.log(`Eliminando animal con id ${e.target.value}`);
-      const note_id = e.target.value;
-      console.log(note_id);
-      dispatch(deleteNote(note_id, accessToken));
-      setTimeout(() => {
-        dispatch(getNotesFromUser(accessToken));
-      }, 1300);
-    } else {
-      console.log(
-        `No se ha eliminado al animal porque confirmPrompt == ${confirmPrompt}`
-      );
-    }
+    const note_id = e.target.value;
+    dispatch(deleteNote(note_id, accessToken));
+    setTimeout(() => {
+      dispatch(getNotesFromUser(accessToken));
+    }, 1000);
   }
 
   function showModal(e) {

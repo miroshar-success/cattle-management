@@ -8,10 +8,6 @@ export function ModalEdit(props) {
   const updatedAnimal = useSelector((state) => state.animals.updatedAnimal);
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    console.log(`useEffect de ModalEdit...`);
-  }, []);
-
   if (!props.show) {
     return null;
   }

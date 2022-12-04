@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { URL_UPDATE_ANIMAL, URL_POST_ANIMAL } from "../../constants/urls";
 import { useDispatch, useSelector } from "react-redux";
 import * as animalActions from "../../redux/features/animals";
@@ -47,21 +48,14 @@ export function FormMdlzd({ closeModal, animal }) {
 
   // HANDLE FUNCTIONS:
   function handleOnChange(e) {
-    console.log(e.target.name, e.target.value);
     setLocalState({ ...localState, [e.target.name]: e.target.value });
-    console.log("EVENTO = ", e);
   }
 
   function handlePregnantRadioChange(e) {
-    console.log(e.target.name, e.target.value);
     if (
       e.target.name === "is_pregnant" &&
       (e.target.value === "false" || !e.target.value)
     ) {
-      console.log(
-        `El target value es falso y el target name es 'is_pregnant'. Seteando delivery_date a "" `
-      );
-
       setLocalState({
         ...localState,
         is_pregnant: false,
@@ -87,10 +81,7 @@ export function FormMdlzd({ closeModal, animal }) {
 
     async function handleSubmitNewAnimalWithNoDispatch(e) {
       e.preventDefault();
-      console.log(
-        `handleSubmitNewAnimalWithNoDispatch invocado. localState: `,
-        localState
-      );
+
       //HACER JS VALIDATIONS...
       try {
         const response = await axios.post(
@@ -99,9 +90,11 @@ export function FormMdlzd({ closeModal, animal }) {
           header(accessToken)
         );
         if (response.status >= 200 && response.status < 210) {
-          alert(`Animal con ID ${localState?.id_senasa} creado exitosamente.`);
-          // setLocalState({
-          // })
+          Swal.fire({
+            title: `Animal con ID ${localState?.id_senasa} creado exitosamente.`,
+            icon: "success",
+            timer: 2100,
+          });
           dispatch(animalActions.getAllAnimals(accessToken));
         }
       } catch (error) {
@@ -110,7 +103,11 @@ export function FormMdlzd({ closeModal, animal }) {
         if (error.response?.data?.error) {
           errorMessage = error.response.data.error;
         }
-        alert(`Hubo un error al intentar registrar el animal. ${errorMessage}`);
+        Swal.fire({
+          title: "Error",
+          text: `${errorMessage}`,
+          icon: "error",
+        });
       }
     }
     handleSubmit = handleSubmitNewAnimalWithNoDispatch;
@@ -127,9 +124,6 @@ export function FormMdlzd({ closeModal, animal }) {
     // handleSubmit = handleSubmitNewAnimal;
   } else {
     if (animal) {
-      console.log(
-        `Se detectó un animal por props. Se asume que es un formulario para edición...`
-      );
       formAdaptativeTitle = "Editar animal";
       formAdaptativeSubmitButton = "Guardar";
       // function handleSubmitEditAnimal(e) {
@@ -156,7 +150,12 @@ export function FormMdlzd({ closeModal, animal }) {
             header(accessToken)
           );
           if (response.status >= 200 && response.status < 210) {
-            alert("Animal editado correctamente.");
+            // alert("Animal editado correctamente.");
+            Swal.fire({
+              title: "Animal editado correctamente",
+              icon: "success",
+              timer: 1500,
+            });
             // setLocalState({
             // })
             dispatch(animalActions.getAllAnimals(accessToken));
@@ -167,9 +166,11 @@ export function FormMdlzd({ closeModal, animal }) {
           if (error.response?.data?.error) {
             errorMessage = error.response.data.error;
           }
-          alert(
-            `Hubo un error al intentar editar el registro. ${errorMessage}`
-          );
+          Swal.fire({
+            title: "Error al intentar editar el registro",
+            text: `${errorMessage}`,
+            icon: "error",
+          });
         }
       }
       handleSubmit = handleSubmitWithNoDispatch;
