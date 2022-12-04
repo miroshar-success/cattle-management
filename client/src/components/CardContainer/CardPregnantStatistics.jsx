@@ -25,7 +25,7 @@ export function CardPregnantStatistics() {
       {pregnant?.rows?.length === 0 ? (
         <div>No hay ningún animal para mostrar </div>
       ) : null}
-      {Array.isArray(pregnant?.rows) ? (
+      {Array.isArray(pregnant?.rows) && pregnant?.rows?.length > 0 ? (
         <div className="rows-animals-grid">
           <PropsPregnantStatistics animals={pregnant.rows} />{" "}
         </div>

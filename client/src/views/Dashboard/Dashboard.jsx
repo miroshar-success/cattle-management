@@ -205,7 +205,7 @@ export function Dashboard() {
               <div>
                 {filters?.sex && statsState?.sex && (
                   <CardFilterContainer
-                    animalsToRender={statsState.sex[filters.sex].rows}
+                    animalsToRender={statsState.sex[filters.sex]?.rows}
                   />
                 )}
               </div>
@@ -246,7 +246,7 @@ export function Dashboard() {
                 {filters?.type_of_animal && statsState?.types && (
                   <CardFilterContainer
                     animalsToRender={
-                      statsState.types[filters.type_of_animal].rows
+                      statsState.types[filters.type_of_animal]?.rows
                     }
                   />
                 )}
@@ -255,7 +255,7 @@ export function Dashboard() {
               <div>
                 {filters?.pregnant && statsState?.sex?.[filters.pregnant] && (
                   <CardFilterContainer
-                    animalsToRender={statsState?.sex[filters.pregnant].rows}
+                    animalsToRender={statsState?.sex[filters.pregnant]?.rows}
                   />
                 )}
               </div>
