@@ -23,7 +23,7 @@
     "react-scripts": "5.0.1",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
-    "sweetalert2": "^11.6.15",
+    "sweetalert2": "11.4.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
