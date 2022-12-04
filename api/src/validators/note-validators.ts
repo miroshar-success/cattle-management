@@ -12,7 +12,8 @@ export function validateNewNoteMDB(bodyFromReq: any): INote {
     title: checkTitle(bodyFromReq.title),
     theme: checkTheme(bodyFromReq.theme),
     comment: checkComment(bodyFromReq.comment),
-    importance: checkImportance(bodyFromReq.importance),
+    // importance: checkImportance(bodyFromReq.importance),
+    importance: bodyFromReq.importance,
   };
   return newNoteObj;
 }
