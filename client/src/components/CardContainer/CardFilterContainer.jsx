@@ -15,7 +15,7 @@ export function CardFilterContainer({ animalsToRender }) {
           <PropsPregnantStatistics animals={animalsToRender} />{" "}
         </div>
       ) : null}
-      {animalsToRender.error ? (
+      {animalsToRender?.error ? (
         <div className="error-msg-div">
           Oops! Hubo un error. Vuelve a intentarlo.
         </div>
