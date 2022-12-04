@@ -17,7 +17,7 @@ export function PieChartTwoObj({
     datasets: [
       {
         label: `# por ${by}`,
-        data: [statsObjOne.count, statsObjTwo.count],
+        data: [statsObjOne?.count, statsObjTwo?.count],
         backgroundColor: [
           // macho:
           "rgba(255, 0, 70, 0.35)",
