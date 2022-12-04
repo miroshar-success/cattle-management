@@ -1,6 +1,7 @@
 import React from "react";
 import InputForm from "../Form/InputForm";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { URL } from "../../constants/urls";
 import { header } from "../../constants/token";
 import { useDispatch } from "react-redux";
@@ -32,7 +33,11 @@ export function NoteForm() {
         header(accessToken)
       );
       if (response.status >= 200 && response.status < 210) {
-        alert("Nota creada exitosamente");
+        Swal.fire({
+          title: "Nota creada",
+          timer: 1500,
+          icon: "success",
+        });
         setInput({
           title: "",
           theme: "",
@@ -48,7 +53,11 @@ export function NoteForm() {
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
-      alert(`Hubo un error al intentar crear la nota. ${errorMessage}`);
+      Swal.fire({
+        title: "Error al crear la nota",
+        text: `${errorMessage}`,
+        icon: "error",
+      });
     }
   }
 

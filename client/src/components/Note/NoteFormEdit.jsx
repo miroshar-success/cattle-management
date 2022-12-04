@@ -1,6 +1,7 @@
 import React from "react";
 import InputForm from "../Form/InputForm";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { URL } from "../../constants/urls";
 import { header } from "../../constants/token";
 import { useDispatch } from "react-redux";
@@ -26,7 +27,6 @@ export function NoteFormEdit({ note, closeModal }) {
 
   async function handleSubmitWithNoDispatch(e) {
     e.preventDefault();
-    console.log("Nueva nota despachada...");
     try {
       const response = await axios.put(
         URL + "note/",
@@ -34,7 +34,11 @@ export function NoteFormEdit({ note, closeModal }) {
         header(accessToken)
       );
       if (response.status >= 200 && response.status < 210) {
-        alert(`${response.data.msg}`);
+        Swal.fire({
+          title: "Nota actualizada",
+          icon: "success",
+          timer: 1700,
+        });
         dispatch(getNotesFromUser(accessToken));
       }
     } catch (error) {
@@ -42,7 +46,11 @@ export function NoteFormEdit({ note, closeModal }) {
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
-      alert(`Hubo un error al intentar editar la nota. ${errorMessage}`);
+      Swal.fire({
+        title: "Error al actualizar la nota",
+        text: `${errorMessage}`,
+        icon: "error",
+      });
     }
   }
 
