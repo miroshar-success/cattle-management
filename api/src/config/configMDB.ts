@@ -15,5 +15,3 @@ export const config = {
     port: SERVER_PORT,
   },
 };
-
-// module.exports = config;
