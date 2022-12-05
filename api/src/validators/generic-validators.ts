@@ -132,18 +132,33 @@ export function isValidURLImage(argumento: any): boolean {
   if (typeof argumento !== "string") {
     return false;
   }
+  if (argumento.length > 250) {
+    console.log(
+      "Error en val fn isValidURLImage. El argumento es demasiado largo."
+    );
+    throw new Error("The length of the url image is too long.");
+  }
+  let argTrimmed = argumento.trim();
   return (
-    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
+    argTrimmed.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
     null
   );
 }
 
 // STRING CONTAINS URLS :
 export function stringContainsURLs(argumento: string): boolean {
+  if (argumento.length > 1000) {
+    console.log(
+      "Error en fn val stringContainsURLs: El argumento es demasiado largo."
+    );
+
+    throw new Error("El argumento es demasiado largo.");
+  }
+  let argTrimmed = argumento.trim();
   if (
     new RegExp(
       "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
-    ).test(argumento)
+    ).test(argTrimmed)
   ) {
     return true;
   } else {
