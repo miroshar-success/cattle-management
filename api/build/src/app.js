@@ -13,7 +13,7 @@ const note_routes_1 = __importDefault(require("./routes/note/note-routes"));
 const jwtMiddleware_1 = __importDefault(require("./config/jwtMiddleware"));
 const rateLimiter_1 = require("./config/rateLimiter");
 const app = (0, express_1.default)();
-app.use(rateLimiter_1.limiter);
+app.use(rateLimiter_1.rateLimiter);
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));

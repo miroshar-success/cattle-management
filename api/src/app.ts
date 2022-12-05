@@ -7,10 +7,10 @@ import userRouter from "./routes/user/user-routes";
 import animalRouter from "./routes/animal/animal-routes";
 import noteRouter from "./routes/note/note-routes";
 import jwtCheck from "./config/jwtMiddleware";
-import { limiter } from "./config/rateLimiter";
+import { rateLimiter } from "./config/rateLimiter";
 
 const app = express();
-app.use(limiter);
+app.use(rateLimiter);
 app.use(helmet());
 app.use(express.json());
 app.use(morgan("dev"));
