@@ -9,7 +9,7 @@ export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
     );
   }
   let emailRegisteredAlready: IUser | null = await User.findOne({
-    email: emailFromReq,
+    email: { $eq: emailFromReq },
   });
   if (emailRegisteredAlready) {
     throw new Error(

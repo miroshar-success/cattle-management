@@ -32,16 +32,21 @@ export async function handleRegisterNewUser(req: JWTRequest, res: Response) {
 }
 
 // USER EXISTS IN THE DATA BASE
-export async function handleDoesUserExistInDB(req: JWTRequest, res: Response) {
+export async function handleDoesUserExistInDBRequest(
+  req: JWTRequest,
+  res: Response
+) {
   try {
-    const userId = req.auth?.sub;
-
-    // const isUserRegisteredinDB = await userIsRegisteredInDB(userId);
-    const isUserRegisteredinDB = await User.findById(userId).lean();
-    if (isUserRegisteredinDB) {
+    const user_id = req.auth?.sub;
+    if (!user_id) {
+      throw new Error("Invalid user id");
+    }
+    // const isUserRegisteredinDB = await User.findById(user_id);
+    const userExists = await User.exists({ _id: { $eq: user_id } });
+    if (userExists) {
       return res.status(200).send({ msg: true });
     }
-    if (!isUserRegisteredinDB) {
+    if (!userExists) {
       console.log(`Usuario no encontrado en la DB.`);
       return res.status(200).send({ msg: false });
     }
