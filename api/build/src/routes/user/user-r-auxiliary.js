@@ -8,7 +8,7 @@ async function emailExistsInDataBase(emailFromReq) {
         throw new Error(`Error al chequear si el email existe en la DataBase: el email '${emailFromReq}' no tiene un formato de email válido.`);
     }
     let emailRegisteredAlready = await mongoDB_1.User.findOne({
-        email: emailFromReq,
+        email: { $eq: emailFromReq },
     });
     if (emailRegisteredAlready) {
         throw new Error(`El email '${emailFromReq}' ya se encuentra registrado en la Data Base. Nombre del usuario al que le pertenece ese email: '${emailRegisteredAlready.name}'`);

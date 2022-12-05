@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetUserInfo = exports.handleDoesUserExistInDB = exports.handleRegisterNewUser = void 0;
+exports.handleGetUserInfo = exports.handleDoesUserExistInDBRequest = exports.handleRegisterNewUser = void 0;
 const user_r_auxiliary_1 = require("./user-r-auxiliary");
 const user_validators_1 = require("../../validators/user-validators");
 // -------- MONGO / MONGOOSE : ------------
@@ -26,16 +26,19 @@ async function handleRegisterNewUser(req, res) {
 }
 exports.handleRegisterNewUser = handleRegisterNewUser;
 // USER EXISTS IN THE DATA BASE
-async function handleDoesUserExistInDB(req, res) {
+async function handleDoesUserExistInDBRequest(req, res) {
     var _a;
     try {
-        const userId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-        // const isUserRegisteredinDB = await userIsRegisteredInDB(userId);
-        const isUserRegisteredinDB = await mongoDB_1.User.findById(userId).lean();
-        if (isUserRegisteredinDB) {
+        const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+        if (!user_id) {
+            throw new Error("Invalid user id");
+        }
+        // const isUserRegisteredinDB = await User.findById(user_id);
+        const userExists = await mongoDB_1.User.exists({ _id: { $eq: user_id } });
+        if (userExists) {
             return res.status(200).send({ msg: true });
         }
-        if (!isUserRegisteredinDB) {
+        if (!userExists) {
             console.log(`Usuario no encontrado en la DB.`);
             return res.status(200).send({ msg: false });
         }
@@ -45,7 +48,7 @@ async function handleDoesUserExistInDB(req, res) {
         return res.status(400).send({ error: error.message });
     }
 }
-exports.handleDoesUserExistInDB = handleDoesUserExistInDB;
+exports.handleDoesUserExistInDBRequest = handleDoesUserExistInDBRequest;
 // USER INFO :
 async function handleGetUserInfo(req, res) {
     var _a;
